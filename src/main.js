@@ -463,10 +463,9 @@ const loadMoreTemplate = `<button class="load-more" type="button">load more</but
  * Renders component inside container
  * @param {Element} container
  * @param {string} component
+ * @return {Element}
  */
-function renderComponent(container, component) {
-  container.insertAdjacentHTML(`beforeend`, component);
-}
+const renderComponent = (container, component) => container.insertAdjacentHTML(`beforeend`, component);
 
 renderComponent(controlContainer, menuTemplate);
 renderComponent(mainContainer, searchTemplate);
