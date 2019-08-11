@@ -1,7 +1,127 @@
 'use strict';
 
+const MENU_ITEMS = [
+  {
+    name: `tasks`,
+    csstext: `task`,
+    checked: true
+  },
+  {
+    name: `statistics`,
+    csstext: `statistic`,
+    checked: false
+  },
+];
 const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
-
+const DAYS = [
+  {
+    name: `mo`,
+    checked: false
+  },
+  {
+    name: `tu`,
+    checked: true
+  },
+  {
+    name: `we`,
+    checked: true
+  },
+  {
+    name: `th`,
+    checked: false
+  },
+  {
+    name: `fr`,
+    checked: false
+  },
+  {
+    name: `sa`,
+    checked: true
+  },
+  {
+    name: `su`,
+    checked: false
+  }
+];
+const STATUS_BTNS = [
+  {
+    name: `save`,
+    type: `submit`
+  },
+  {
+    name: `delete`,
+    type: `button`
+  }
+];
+const CARD_CONTROLS_EDIT = [
+  {
+    name: `archive`,
+    disabled: false
+  },
+  {
+    name: `favorites`,
+    disabled: false
+  }
+];
+const FILTER = [
+  {
+    name: `all`,
+    count: 13,
+    checked: true,
+    disabled: false
+  },
+  {
+    name: `overdue`,
+    count: 0,
+    checked: false,
+    disabled: true
+  },
+  {
+    name: `today`,
+    count: 0,
+    checked: false,
+    disabled: true
+  },
+  {
+    name: `favorites`,
+    count: 1,
+    checked: false,
+    disabled: false
+  },
+  {
+    name: `repeating`,
+    count: 1,
+    checked: false,
+    disabled: false
+  },
+  {
+    name: `tags`,
+    count: 1,
+    checked: false,
+    disabled: false
+  },
+  {
+    name: `archive`,
+    count: 115,
+    checked: false,
+    disabled: false
+  },
+];
+const SORT_TYPE = [`DEFAULT`, `DATE up`, `DATE down`];
+const CARD_CONTROLS = [
+  {
+    name: `edit`,
+    disabled: false
+  },
+  {
+    name: `archive`,
+    disabled: false
+  },
+  {
+    name: `favorites`,
+    disabled: true
+  }
+];
 const TASKS = [
   {
     text: `Example default task with ${COLORS[0]} color.`,
@@ -27,8 +147,74 @@ const TASKS = [
 ];
 
 // containers
-const main = document.querySelector(`.main`);
-const control = document.querySelector(`.control`);
+const mainContainer = document.querySelector(`.main`);
+const controlContainer = document.querySelector(`.control`);
+
+const getMenuTemplate = (menuItem) => {
+  if (menuItem.checked) {
+    return `
+      <input
+        type="radio"
+        name="control"
+        id="control__${menuItem.csstext}"
+        class="control__input visually-hidden"
+        checked
+      />
+      <label for="control__${menuItem.csstext}" class="control__label">${menuItem.name.toUpperCase()}</label>
+    `;
+  } else {
+    return `
+      <input
+        type="radio"
+        name="control"
+        id="control__${menuItem.csstext}"
+        class="control__input visually-hidden"
+      />
+      <label for="control__${menuItem.csstext}" class="control__label">${menuItem.name.toUpperCase()}</label>
+    `;
+  }
+};
+
+const getFilterTemplate = (filter) => {
+  if (filter.checked) {
+    return `
+    <input
+      type="radio"
+      id="filter__${filter.name}"  
+      class="filter__input visually-hidden"
+      name="filter"
+      checked
+    />
+    <label for="filter__${filter.name}" class="filter__label">
+      ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
+    >`;
+  } else if (filter.disabled) {
+    return `
+        <input
+      type="radio"
+      id="filter__${filter.name}"  
+      class="filter__input visually-hidden"
+      name="filter"
+      disabled
+    />
+    <label for="filter__${filter.name}" class="filter__label">
+      ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
+    >
+    `;
+  } else {
+    return `
+        <input
+      type="radio"
+      id="filter__${filter.name}"  
+      class="filter__input visually-hidden"
+      name="filter"
+    />
+    <label for="filter__${filter.name}" class="filter__label">
+      ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
+    >
+    `;
+  }
+};
 
 const getColorTemplate = (color) => `                                
   <input
@@ -46,6 +232,60 @@ const getColorTemplate = (color) => `
   >
 `;
 
+const getDaysTemplate = (day) => {
+  if (day.checked) {
+    return `
+          <input
+        class="visually-hidden card__repeat-day-input"
+        type="checkbox"
+        id="repeat-${day.name}-1"
+        name="repeat"
+        value="${day.name}"
+        checked
+      />
+      <label class="card__repeat-day" for="repeat-${day.name}-1"
+        >${day.name}</label
+      >`;
+  } else {
+    return `
+      <input
+        class="visually-hidden card__repeat-day-input"
+        type="checkbox"
+        id="repeat-${day.name}-1"
+        name="repeat"
+        value="${day.name}"
+      />
+      <label class="card__repeat-day" for="repeat-${day.name}-1"
+        >${day.name}</label
+      >`;
+  }
+};
+
+const getCardControlTemplate = (cardControl) => {
+  if (cardControl.disabled) {
+    return `
+          <button
+            type="button"
+            class="card__btn card__btn--${cardControl.name} card__btn--disabled"
+          >
+            ${cardControl.name}
+          </button>
+  `;
+  } else {
+    return `
+          <button
+            type="button"
+            class="card__btn card__btn--${cardControl.name}"
+          >
+            ${cardControl.name}
+          </button>
+`;
+  }
+};
+
+const getSortFilterTemplate = (type) => `<a href="#" class="board__filter">SORT BY ${type}</a>`;
+
+const getStatusBtnsTemplate = (btn) => `<button class="card__${btn.name}" type="${btn.type}">${btn.name}</button>`;
 
 const getHashtagTemplate = (hashtag) => `
   <span class="card__hashtag-inner">
@@ -55,24 +295,12 @@ const getHashtagTemplate = (hashtag) => `
   </span>
 `;
 
-
 const getTaskTemplate = (task) => `
   <article class="card card--${task.color}">
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
-          <button type="button" class="card__btn card__btn--edit">
-            edit
-          </button>
-          <button type="button" class="card__btn card__btn--archive">
-            archive
-          </button>
-          <button
-            type="button"
-            class="card__btn card__btn--favorites card__btn--disabled"
-          >
-            favorites
-          </button>
+        ${CARD_CONTROLS.map(getCardControlTemplate).join(``)}
         </div>
 
         <div class="card__color-bar">
@@ -109,132 +337,50 @@ const getTaskTemplate = (task) => `
 `;
 
 // components markup
-const menu = `<section class="control__btn-wrap">
-          <input
-              type="radio"
-              name="control"
-              id="control__new-task"
-              class="control__input visually-hidden"
-            />
-            <label for="control__new-task" class="control__label control__label--new-task"
-              >+ ADD NEW TASK</label
-            >
-            <input
-              type="radio"
-              name="control"
-              id="control__task"
-              class="control__input visually-hidden"
-              checked
-            />
-            <label for="control__task" class="control__label">TASKS</label>
-            <input
-              type="radio"
-              name="control"
-              id="control__statistic"
-              class="control__input visually-hidden"
-            />
-            <label for="control__statistic" class="control__label"
-              >STATISTICS</label
-            >
-          </section>`;
+const menuTemplate = `
+  <section class="control__btn-wrap">
+    <input
+        type="radio"
+        name="control"
+        id="control__new-task"
+        class="control__input visually-hidden"
+      />
+      <label for="control__new-task" class="control__label control__label--new-task"
+        >+ ADD NEW TASK</label
+      >
+      ${MENU_ITEMS.map(getMenuTemplate).join(``)}
+  </section>
+`;
 
-const search = `
-          <section class="main__search search container">
-              <input
-                type="text"
-                id="search__input"
-                class="search__input"
-                placeholder="START TYPING — SEARCH BY WORD, #HASHTAG OR DATE"
-              />
-              <label class="visually-hidden" for="search__input">Search</label>
-          </section>`;
+const searchTemplate = `
+  <section class="main__search search container">
+      <input
+        type="text"
+        id="search__input"
+        class="search__input"
+        placeholder="START TYPING — SEARCH BY WORD, #HASHTAG OR DATE"
+      />
+      <label class="visually-hidden" for="search__input">Search</label>
+  </section>
+`;
 
-const filter = `<section class="main__filter filter container">
-                          <input
-                            type="radio"
-                            id="filter__all"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                            checked
-                          />
-                          <label for="filter__all" class="filter__label">
-                            All <span class="filter__all-count">13</span></label
-                          >
-                          <input
-                            type="radio"
-                            id="filter__overdue"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                            disabled
-                          />
-                          <label for="filter__overdue" class="filter__label"
-                          >Overdue <span class="filter__overdue-count">0</span></label>
-                          <input
-                            type="radio"
-                            id="filter__today"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                            disabled
-                          />
-                          <label for="filter__today" class="filter__label"
-                            >Today <span class="filter__today-count">0</span></label>
-                          <input
-                            type="radio"
-                            id="filter__favorites"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                          />
-                          <label for="filter__favorites" class="filter__label"
-                            >Favorites <span class="filter__favorites-count">1</span></label
-                          >
-                          <input
-                            type="radio"
-                            id="filter__repeating"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                          />
-                          <label for="filter__repeating" class="filter__label"
-                            >Repeating <span class="filter__repeating-count">1</span></label
-                          >
-                          <input
-                            type="radio"
-                            id="filter__tags"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                          />
-                          <label for="filter__tags" class="filter__label"
-                            >Tags <span class="filter__tags-count">1</span></label
-                          >
-                          <input
-                            type="radio"
-                            id="filter__archive"
-                            class="filter__input visually-hidden"
-                            name="filter"
-                          />
-                          <label for="filter__archive" class="filter__label"
-                            >Archive <span class="filter__archive-count">115</span></label
-                          >
-          </section>`;
+const filterTemplate = `
+  <section class="main__filter filter container">
+    ${FILTER.map(getFilterTemplate).join(``)}
+  </section>
+`;
 
-const filterList = `<div class="board__filter-list">
-            <a href="#" class="board__filter">SORT BY DEFAULT</a>
-            <a href="#" class="board__filter">SORT BY DATE up</a>
-            <a href="#" class="board__filter">SORT BY DATE down</a>
-          </div>`;
+const filterListTemplate = `
+  <div class="board__filter-list">
+      ${SORT_TYPE.map(getSortFilterTemplate).join(``)}
+  </div>
+`;
 
-const taskEdit = `<article class="card card--edit card--black">
+const taskEditTemplate = `<article class="card card--edit card--black">
                       <form class="card__form" method="get">
                         <div class="card__inner">
                           <div class="card__control">
-                            <button type="button" class="card__btn card__btn--archive">
-                              archive
-                            </button>
-                            <button
-                              type="button"
-                              class="card__btn card__btn--favorites card__btn--disabled"
-                            >
-                              favorites
-                            </button>
+                          ${CARD_CONTROLS_EDIT.map(getCardControlTemplate).join(``)}
                           </div>
 
                           <div class="card__color-bar">
@@ -277,79 +423,7 @@ const taskEdit = `<article class="card card--edit card--black">
 
                                 <fieldset class="card__repeat-days" disabled>
                                   <div class="card__repeat-days-inner">
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      id="repeat-mo-1"
-                                      name="repeat"
-                                      value="mo"
-                                    />
-                                    <label class="card__repeat-day" for="repeat-mo-1"
-                                      >mo</label
-                                    >
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      id="repeat-tu-1"
-                                      name="repeat"
-                                      value="tu"
-                                      checked
-                                    />
-                                    <label class="card__repeat-day" for="repeat-tu-1"
-                                      >tu</label
-                                    >
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      id="repeat-we-1"
-                                      name="repeat"
-                                      value="we"
-                                    />
-                                    <label class="card__repeat-day" for="repeat-we-1"
-                                      >we</label
-                                    >
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      id="repeat-th-1"
-                                      name="repeat"
-                                      value="th"
-                                    />
-                                    <label class="card__repeat-day" for="repeat-th-1"
-                                      >th</label
-                                    >
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      id="repeat-fr-1"
-                                      name="repeat"
-                                      value="fr"
-                                      checked
-                                    />
-                                    <label class="card__repeat-day" for="repeat-fr-1"
-                                      >fr</label
-                                    >
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      name="repeat"
-                                      value="sa"
-                                      id="repeat-sa-1"
-                                    />
-                                    <label class="card__repeat-day" for="repeat-sa-1"
-                                      >sa</label
-                                    >
-                                    <input
-                                      class="visually-hidden card__repeat-day-input"
-                                      type="checkbox"
-                                      id="repeat-su-1"
-                                      name="repeat"
-                                      value="su"
-                                      checked
-                                    />
-                                    <label class="card__repeat-day" for="repeat-su-1"
-                                      >su</label
-                                    >
+                                  ${DAYS.map(getDaysTemplate).join(``)}
                                   </div>
                                 </fieldset>
                               </div>
@@ -377,42 +451,41 @@ const taskEdit = `<article class="card card--edit card--black">
                           </div>
 
                           <div class="card__status-btns">
-                            <button class="card__save" type="submit">save</button>
-                            <button class="card__delete" type="button">delete</button>
+                          ${STATUS_BTNS.map(getStatusBtnsTemplate).join(``)}
                           </div>
                         </div>
                       </form>
                     </article>`;
 
-const loadMore = `<button class="load-more" type="button">load more</button>`;
+const loadMoreTemplate = `<button class="load-more" type="button">load more</button>`;
 
 /**
  * Renders component inside container
- * @param {HTMLElement} container
+ * @param {Element} container
  * @param {string} component
  */
 function renderComponent(container, component) {
   container.insertAdjacentHTML(`beforeend`, component);
 }
 
-renderComponent(control, menu);
-renderComponent(main, search);
-renderComponent(main, filter);
+renderComponent(controlContainer, menuTemplate);
+renderComponent(mainContainer, searchTemplate);
+renderComponent(mainContainer, filterTemplate);
 
 // create board container
 const boardContainer = document.createElement(`section`);
 boardContainer.classList.add(`board`, `container`);
-main.appendChild(boardContainer);
+mainContainer.appendChild(boardContainer);
 
-renderComponent(boardContainer, filterList);
+renderComponent(boardContainer, filterListTemplate);
 
 // create tasks container
 const tasksContainer = document.createElement(`div`);
 tasksContainer.classList.add(`board__tasks`);
 boardContainer.appendChild(tasksContainer);
 
-renderComponent(tasksContainer, taskEdit);
+renderComponent(tasksContainer, taskEditTemplate);
 TASKS.forEach((el) => renderComponent(tasksContainer, getTaskTemplate(el)));
-renderComponent(boardContainer, loadMore);
+renderComponent(boardContainer, loadMoreTemplate);
 
 
