@@ -1,4 +1,113 @@
 'use strict';
+
+const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+
+const TASKS = [
+  {
+    text: `Example default task with ${COLORS[0]} color.`,
+    color: `${COLORS[0]}`,
+    date: `23 September`,
+    time: `11:15 PM`,
+    hashtag: [`personal`, `important`]
+  },
+  {
+    text: `Example default task with ${COLORS[1]} color.`,
+    color: `${COLORS[1]}`,
+    date: `24 September`,
+    time: `11:30 PM`,
+    hashtag: [`todo`, `personal`, `important`]
+  },
+  {
+    text: `Example default task with ${COLORS[4]} color.`,
+    color: `${COLORS[4]}`,
+    date: `25 September`,
+    time: `11:50 PM`,
+    hashtag: [`todo`, `important`]
+  }
+];
+
+// containers
+const main = document.querySelector(`.main`);
+const control = document.querySelector(`.control`);
+
+const getColorTemplate = (color) => `                                
+  <input
+    type="radio"
+    id="color-${color}-1"
+    class="card__color-input card__color-input--${color} visually-hidden"
+    name="color"
+    value="${color}"
+    checked
+  />
+  <label
+    for="color-${color}-1"
+    class="card__color card__color--${color}"
+    >${color}</label
+  >
+`;
+
+
+const getHashtagTemplate = (hashtag) => `
+  <span class="card__hashtag-inner">
+    <span class="card__hashtag-name">
+      #${hashtag}
+    </span>
+  </span>
+`;
+
+
+const getTaskTemplate = (task) => `
+  <article class="card card--${task.color}">
+    <div class="card__form">
+      <div class="card__inner">
+        <div class="card__control">
+          <button type="button" class="card__btn card__btn--edit">
+            edit
+          </button>
+          <button type="button" class="card__btn card__btn--archive">
+            archive
+          </button>
+          <button
+            type="button"
+            class="card__btn card__btn--favorites card__btn--disabled"
+          >
+            favorites
+          </button>
+        </div>
+
+        <div class="card__color-bar">
+          <svg class="card__color-bar-wave" width="100%" height="10">
+            <use xlink:href="#wave"></use>
+          </svg>
+        </div>
+
+        <div class="card__textarea-wrap">
+          <p class="card__text">${task.text}</p>
+        </div>
+
+        <div class="card__settings">
+          <div class="card__details">
+            <div class="card__dates">
+              <div class="card__date-deadline">
+                <p class="card__input-deadline-wrap">
+                  <span class="card__date">${task.date}</span>
+                  <span class="card__time">${task.time}</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="card__hashtag">
+              <div class="card__hashtag-list">
+              ${task.hashtag.map(getHashtagTemplate).join(``)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+`;
+
 // components markup
 const menu = `<section class="control__btn-wrap">
           <input
@@ -127,13 +236,13 @@ const taskEdit = `<article class="card card--edit card--black">
                               favorites
                             </button>
                           </div>
-          
+
                           <div class="card__color-bar">
                             <svg width="100%" height="10">
                               <use xlink:href="#wave"></use>
                             </svg>
                           </div>
-          
+
                           <div class="card__textarea-wrap">
                             <label>
                               <textarea
@@ -143,14 +252,14 @@ const taskEdit = `<article class="card card--edit card--black">
                               >This is example of new task, you can add picture, set date and time, add tags.</textarea>
                             </label>
                           </div>
-          
+
                           <div class="card__settings">
                             <div class="card__details">
                               <div class="card__dates">
                                 <button class="card__date-deadline-toggle" type="button">
                                   date: <span class="card__date-status">no</span>
                                 </button>
-          
+
                                 <fieldset class="card__date-deadline" disabled>
                                   <label class="card__input-deadline-wrap">
                                     <input
@@ -161,11 +270,11 @@ const taskEdit = `<article class="card card--edit card--black">
                                     />
                                   </label>
                                 </fieldset>
-          
+
                                 <button class="card__repeat-toggle" type="button">
                                   repeat:<span class="card__repeat-status">no</span>
                                 </button>
-          
+
                                 <fieldset class="card__repeat-days" disabled>
                                   <div class="card__repeat-days-inner">
                                     <input
@@ -244,10 +353,10 @@ const taskEdit = `<article class="card card--edit card--black">
                                   </div>
                                 </fieldset>
                               </div>
-          
+
                               <div class="card__hashtag">
                                 <div class="card__hashtag-list"></div>
-          
+
                                 <label>
                                   <input
                                     type="text"
@@ -258,75 +367,15 @@ const taskEdit = `<article class="card card--edit card--black">
                                 </label>
                               </div>
                             </div>
-          
+
                             <div class="card__colors-inner">
                               <h3 class="card__colors-title">Color</h3>
                               <div class="card__colors-wrap">
-                                <input
-                                  type="radio"
-                                  id="color-black-1"
-                                  class="card__color-input card__color-input--black visually-hidden"
-                                  name="color"
-                                  value="black"
-                                  checked
-                                />
-                                <label
-                                  for="color-black-1"
-                                  class="card__color card__color--black"
-                                  >black</label
-                                >
-                                <input
-                                  type="radio"
-                                  id="color-yellow-1"
-                                  class="card__color-input card__color-input--yellow visually-hidden"
-                                  name="color"
-                                  value="yellow"
-                                />
-                                <label
-                                  for="color-yellow-1"
-                                  class="card__color card__color--yellow"
-                                  >yellow</label
-                                >
-                                <input
-                                  type="radio"
-                                  id="color-blue-1"
-                                  class="card__color-input card__color-input--blue visually-hidden"
-                                  name="color"
-                                  value="blue"
-                                />
-                                <label
-                                  for="color-blue-1"
-                                  class="card__color card__color--blue"
-                                  >blue</label
-                                >
-                                <input
-                                  type="radio"
-                                  id="color-green-1"
-                                  class="card__color-input card__color-input--green visually-hidden"
-                                  name="color"
-                                  value="green"
-                                />
-                                <label
-                                  for="color-green-1"
-                                  class="card__color card__color--green"
-                                  >green</label
-                                >
-                                <input
-                                  type="radio"
-                                  id="color-pink-1"
-                                  class="card__color-input card__color-input--pink visually-hidden"
-                                  name="color"
-                                  value="pink"
-                                />
-                                <label
-                                  for="color-pink-1"
-                                  class="card__color card__color--pink"
-                                  >pink</label
-                                >
+                              ${COLORS.map(getColorTemplate).join(``)}
                               </div>
                             </div>
                           </div>
-          
+
                           <div class="card__status-btns">
                             <button class="card__save" type="submit">save</button>
                             <button class="card__delete" type="button">delete</button>
@@ -335,99 +384,7 @@ const taskEdit = `<article class="card card--edit card--black">
                       </form>
                     </article>`;
 
-const task = `<article class="card card--black">
-              <div class="card__form">
-                <div class="card__inner">
-                  <div class="card__control">
-                    <button type="button" class="card__btn card__btn--edit">
-                      edit
-                    </button>
-                    <button type="button" class="card__btn card__btn--archive">
-                      archive
-                    </button>
-                    <button
-                      type="button"
-                      class="card__btn card__btn--favorites card__btn--disabled"
-                    >
-                      favorites
-                    </button>
-                  </div>
-          
-                  <div class="card__color-bar">
-                    <svg class="card__color-bar-wave" width="100%" height="10">
-                      <use xlink:href="#wave"></use>
-                    </svg>
-                  </div>
-          
-                  <div class="card__textarea-wrap">
-                    <p class="card__text">Example default task with default color.</p>
-                  </div>
-          
-                  <div class="card__settings">
-                    <div class="card__details">
-                      <div class="card__dates">
-                        <div class="card__date-deadline">
-                          <p class="card__input-deadline-wrap">
-                            <span class="card__date">23 September</span>
-                            <span class="card__time">11:15 PM</span>
-                          </p>
-                        </div>
-                      </div>
-          
-                      <div class="card__hashtag">
-                        <div class="card__hashtag-list">
-                          <span class="card__hashtag-inner">
-                            <span class="card__hashtag-name">
-                              #todo
-                            </span>
-                          </span>
-          
-                          <span class="card__hashtag-inner">
-                            <span class="card__hashtag-name">
-                              #personal
-                            </span>
-                          </span>
-          
-                          <span class="card__hashtag-inner">
-                            <span class="card__hashtag-name">
-                              #important
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </article>`;
-
 const loadMore = `<button class="load-more" type="button">load more</button>`;
-
-// containers
-const main = document.querySelector(`.main`);
-const control = document.querySelector(`.control`);
-
-/**
- * @function createBoardContainer
- * @return {HTMLElement}
- */
-function createBoardContainer() {
-  const boardContainer = document.createElement(`section`);
-  boardContainer.classList.add(`board`, `container`);
-  main.appendChild(boardContainer);
-  return boardContainer;
-}
-
-/**
- * @function createTasksContainer
- * @return {HTMLElement}
- */
-function createTasksContainer() {
-  const tasksContainer = document.createElement(`div`);
-  tasksContainer.classList.add(`board__tasks`);
-  board.appendChild(tasksContainer);
-  return tasksContainer;
-}
 
 /**
  * Renders component inside container
@@ -442,16 +399,20 @@ renderComponent(control, menu);
 renderComponent(main, search);
 renderComponent(main, filter);
 
-renderComponent(createBoardContainer(), filterList);
-const board = document.querySelector(`.board`);
-board.appendChild(createTasksContainer());
-const tasks = document.querySelector(`.board__tasks`);
-renderComponent(tasks, taskEdit);
+// create board container
+const boardContainer = document.createElement(`section`);
+boardContainer.classList.add(`board`, `container`);
+main.appendChild(boardContainer);
 
-for (let i = 0; i <= 2; i++) {
-  renderComponent(tasks, task);
-}
+renderComponent(boardContainer, filterList);
 
-renderComponent(board, loadMore);
+// create tasks container
+const tasksContainer = document.createElement(`div`);
+tasksContainer.classList.add(`board__tasks`);
+boardContainer.appendChild(tasksContainer);
+
+renderComponent(tasksContainer, taskEdit);
+TASKS.forEach((el) => renderComponent(tasksContainer, getTaskTemplate(el)));
+renderComponent(boardContainer, loadMore);
 
 
