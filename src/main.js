@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @function getMenuItemTemplate
+ * Gets menu item template
  * @param {Object} menuItem
  * @return {string}
  */
@@ -16,6 +16,11 @@ const getMenuItemTemplate = (menuItem) => `
   <label for="control__${menuItem.csstext}" class="control__label ${(menuItem.csstext === `new-task`) ? `control__label--new-task` : ``}">${menuItem.name.toUpperCase()}</label>
 `;
 
+/**
+ * Gets filter item template
+ * @param {Object} filterItem
+ * @return {string}
+ */
 const getFilterItemTemplate = (filterItem) => `
   <input
     type="radio"
@@ -30,6 +35,11 @@ const getFilterItemTemplate = (filterItem) => `
   >
 `;
 
+/**
+ * Gets color template
+ * @param {string} color
+ * @return {string}
+ */
 const getColorTemplate = (color) => `                                
   <input
     type="radio"
@@ -46,7 +56,12 @@ const getColorTemplate = (color) => `
   >
 `;
 
-const getDaysTemplate = (day) => `
+/**
+ * Gets day template
+ * @param {string} day
+ * @return {string}
+ */
+const getDayTemplate = (day) => `
   <input
     class="visually-hidden card__repeat-day-input"
     type="checkbox"
@@ -60,6 +75,11 @@ const getDaysTemplate = (day) => `
   >
 `;
 
+/**
+ * Gets card control template
+ * @param {Object} cardControl
+ * @return {string}
+ */
 const getCardControlTemplate = (cardControl) => `
   <button
     type="button"
@@ -69,10 +89,25 @@ const getCardControlTemplate = (cardControl) => `
   </button>
 `;
 
-const getSortFilterTemplate = (type) => `<a href="#" class="board__filter">SORT BY ${type}</a>`;
+/**
+ * Gets sort filter template
+ * @param {Object} filter
+ * @return {string}
+ */
+const getSortFilterTemplate = (filter) => `<a href="${filter.href}" class="board__filter">SORT BY ${filter.name}</a>`;
 
+/**
+ * Gets status buttons template
+ * @param {Object} btn
+ * @return {string}
+ */
 const getStatusBtnsTemplate = (btn) => `<button class="card__${btn.name}" type="${btn.type}">${btn.name}</button>`;
 
+/**
+ * Gets hashtag template
+ * @param {string} hashtag
+ * @return {string}
+ */
 const getHashtagTemplate = (hashtag) => `
   <span class="card__hashtag-inner">
     <span class="card__hashtag-name">
@@ -81,6 +116,11 @@ const getHashtagTemplate = (hashtag) => `
   </span>
 `;
 
+/**
+ * Gets task template
+ * @param {Object} task
+ * @return {string}
+ */
 const getTaskTemplate = (task) => `
   <article class="card card--${task.color}">
     <div class="card__form">
@@ -122,12 +162,21 @@ const getTaskTemplate = (task) => `
   </article>
 `;
 
+/**
+ * Gets menu template
+ * @param {Object} menuData
+ * @return {string}
+ */
 const getMenuTemplate = (menuData) => `
   <section class="control__btn-wrap">
     ${Object.keys(menuData).map((el) => getMenuItemTemplate(menuData[el])).join(``)}
   </section>
 `;
 
+/**
+ * Gets search template
+ * @return {string}
+ */
 const getSearchTemplate = () => `
   <section class="main__search search container">
       <input
@@ -140,12 +189,22 @@ const getSearchTemplate = () => `
   </section>
 `;
 
+/**
+ * Gets filter template
+ * @param {Object} filterData
+ * @return {string}
+ */
 const getFilterTemplate = (filterData) => `
   <section class="main__filter filter container">
     ${Object.keys(filterData).map((el) => getFilterItemTemplate(filterData[el])).join(``)}
   </section>
 `;
 
+/**
+ * Gets search and filter template
+ * @param {Object} filterData
+ * @return {string}
+ */
 const getSearchAndFilterTemplate = (filterData) => {
   const joinedTemplate = [];
   joinedTemplate.push(getSearchTemplate());
@@ -153,18 +212,31 @@ const getSearchAndFilterTemplate = (filterData) => {
   return joinedTemplate.join(``);
 };
 
-const getFilterListTemplate = () => `
+/**
+ * Gets filter list template
+ * @param {Array} sortOptions
+ * @return {string}
+ */
+const getFilterListTemplate = (sortOptions) => `
   <div class="board__filter-list">
-      ${sortType.map((el) => getSortFilterTemplate(el[name])).join(``)}
+      ${sortOptions.map(getSortFilterTemplate).join(``)}
   </div>
 `;
 
-const getTaskEditTemplate = () => `
+/**
+ * Gets task edit template
+ * @param {Array} controlsData
+ * @param {Array} daysData
+ * @param {Array} colorsData
+ * @param {Array} statusData
+ * @return {string}
+ */
+const getTaskEditTemplate = (controlsData, daysData, colorsData, statusData) => `
 <article class="card card--edit card--black">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
-        ${cardControlsEdit.map(getCardControlTemplate).join(``)}
+        ${controlsData.map(getCardControlTemplate).join(``)}
         </div>
 
         <div class="card__color-bar">
@@ -207,7 +279,7 @@ const getTaskEditTemplate = () => `
 
               <fieldset class="card__repeat-days" disabled>
                 <div class="card__repeat-days-inner">
-                ${days.map(getDaysTemplate).join(``)}
+                ${daysData.map(getDayTemplate).join(``)}
                 </div>
               </fieldset>
             </div>
@@ -229,26 +301,44 @@ const getTaskEditTemplate = () => `
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-            ${colors.map(getColorTemplate).join(``)}
+            ${colorsData.map(getColorTemplate).join(``)}
             </div>
           </div>
         </div>
 
         <div class="card__status-btns">
-        ${statusBtns.map(getStatusBtnsTemplate).join(``)}
+        ${statusData.map(getStatusBtnsTemplate).join(``)}
         </div>
       </div>
     </form>
   </article>
 `;
 
+/**
+ * Gets load template
+ * @return {string}
+ */
 const getLoadTemplate = () => `<button class="load-more" type="button">load more</button>`;
 
+/**
+ * Gets task template
+ * @param {Array} tasksData
+ * @return {string}
+ */
 const getTasksTemplate = (tasksData) => tasksData.map(getTaskTemplate).join(``);
 
-const getTaskEditAndTasksTemplate = (tasksData) => {
+/**
+ * Gets task edit and tasks template
+ * @param {Array} controlsData
+ * @param {Array} daysData
+ * @param {Array} colorsData
+ * @param {Array} statusData
+ * @param {Array} tasksData
+ * @return {string}
+ */
+const getTaskEditAndTasksTemplate = (controlsData, daysData, colorsData, statusData, tasksData) => {
   const joinedTemplate = [];
-  joinedTemplate.push(getTaskEditTemplate());
+  joinedTemplate.push(getTaskEditTemplate(controlsData, daysData, colorsData, statusData));
   joinedTemplate.push(getTasksTemplate(tasksData));
   return joinedTemplate.join(``);
 };
@@ -262,12 +352,20 @@ const getTaskEditAndTasksTemplate = (tasksData) => {
  */
 const renderComponent = (container, component, position = `beforeend`) => container.insertAdjacentHTML(position, component);
 
+/**
+ * Renders board container
+ * @return {HTMLElement}
+ */
 const renderBoardContainer = () => {
   boardContainer.classList.add(`board`, `container`);
   mainContainer.appendChild(boardContainer);
   return boardContainer;
 };
 
+/**
+ * Renders tasks container
+ * @return {HTMLDivElement}
+ */
 const renderTasksContainer = () => {
   tasksContainer.classList.add(`board__tasks`);
   boardContainer.appendChild(tasksContainer);
@@ -389,15 +487,15 @@ const filter = {
 const sortType = [
   {
     name: `DEFAULT`,
-    href: ``
+    href: `#`
   },
   {
     name: `DATE up`,
-    href: ``
+    href: `#`
   },
   {
     name: `DATE down`,
-    href: ``
+    href: `#`
   }
 ];
 const cardControls = [
@@ -444,6 +542,6 @@ const tasksContainer = document.createElement(`div`);
 
 renderComponent(controlContainer, getMenuTemplate(mainMenu));
 renderComponent(mainContainer, getSearchAndFilterTemplate(filter));
-renderComponent(renderBoardContainer(), getFilterListTemplate());
-renderComponent(renderTasksContainer(), getTaskEditAndTasksTemplate(tasks));
+renderComponent(renderBoardContainer(), getFilterListTemplate(sortType));
+renderComponent(renderTasksContainer(), getTaskEditAndTasksTemplate(cardControlsEdit, days, colors, statusBtns, tasks));
 renderComponent(boardContainer, getLoadTemplate());
