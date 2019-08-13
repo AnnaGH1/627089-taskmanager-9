@@ -1,220 +1,34 @@
 'use strict';
 
-const MENU_ITEMS = [
-  {
-    name: `tasks`,
-    csstext: `task`,
-    checked: true
-  },
-  {
-    name: `statistics`,
-    csstext: `statistic`,
-    checked: false
-  },
-];
-const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
-const DAYS = [
-  {
-    name: `mo`,
-    checked: false
-  },
-  {
-    name: `tu`,
-    checked: true
-  },
-  {
-    name: `we`,
-    checked: true
-  },
-  {
-    name: `th`,
-    checked: false
-  },
-  {
-    name: `fr`,
-    checked: false
-  },
-  {
-    name: `sa`,
-    checked: true
-  },
-  {
-    name: `su`,
-    checked: false
-  }
-];
-const STATUS_BTNS = [
-  {
-    name: `save`,
-    type: `submit`
-  },
-  {
-    name: `delete`,
-    type: `button`
-  }
-];
-const CARD_CONTROLS_EDIT = [
-  {
-    name: `archive`,
-    disabled: false
-  },
-  {
-    name: `favorites`,
-    disabled: false
-  }
-];
-const FILTER = [
-  {
-    name: `all`,
-    count: 13,
-    checked: true,
-    disabled: false
-  },
-  {
-    name: `overdue`,
-    count: 0,
-    checked: false,
-    disabled: true
-  },
-  {
-    name: `today`,
-    count: 0,
-    checked: false,
-    disabled: true
-  },
-  {
-    name: `favorites`,
-    count: 1,
-    checked: false,
-    disabled: false
-  },
-  {
-    name: `repeating`,
-    count: 1,
-    checked: false,
-    disabled: false
-  },
-  {
-    name: `tags`,
-    count: 1,
-    checked: false,
-    disabled: false
-  },
-  {
-    name: `archive`,
-    count: 115,
-    checked: false,
-    disabled: false
-  },
-];
-const SORT_TYPE = [`DEFAULT`, `DATE up`, `DATE down`];
-const CARD_CONTROLS = [
-  {
-    name: `edit`,
-    disabled: false
-  },
-  {
-    name: `archive`,
-    disabled: false
-  },
-  {
-    name: `favorites`,
-    disabled: true
-  }
-];
-const TASKS = [
-  {
-    text: `Example default task with ${COLORS[0]} color.`,
-    color: `${COLORS[0]}`,
-    date: `23 September`,
-    time: `11:15 PM`,
-    hashtag: [`personal`, `important`]
-  },
-  {
-    text: `Example default task with ${COLORS[1]} color.`,
-    color: `${COLORS[1]}`,
-    date: `24 September`,
-    time: `11:30 PM`,
-    hashtag: [`todo`, `personal`, `important`]
-  },
-  {
-    text: `Example default task with ${COLORS[4]} color.`,
-    color: `${COLORS[4]}`,
-    date: `25 September`,
-    time: `11:50 PM`,
-    hashtag: [`todo`, `important`]
-  }
-];
+/**
+ * @function getMenuItemTemplate
+ * @param {Object} menuItem
+ * @return {string}
+ */
+const getMenuItemTemplate = (menuItem) => `
+  <input
+    type="radio"
+    name="control"
+    id="control__${menuItem.csstext}"
+    class="control__input visually-hidden"
+    ${menuItem.isChecked && `checked`}
+  />
+  <label for="control__${menuItem.csstext}" class="control__label">${menuItem.name.toUpperCase()}</label>
+`;
 
-// containers
-const mainContainer = document.querySelector(`.main`);
-const controlContainer = document.querySelector(`.control`);
-
-const getMenuTemplate = (menuItem) => {
-  if (menuItem.checked) {
-    return `
-      <input
-        type="radio"
-        name="control"
-        id="control__${menuItem.csstext}"
-        class="control__input visually-hidden"
-        checked
-      />
-      <label for="control__${menuItem.csstext}" class="control__label">${menuItem.name.toUpperCase()}</label>
-    `;
-  } else {
-    return `
-      <input
-        type="radio"
-        name="control"
-        id="control__${menuItem.csstext}"
-        class="control__input visually-hidden"
-      />
-      <label for="control__${menuItem.csstext}" class="control__label">${menuItem.name.toUpperCase()}</label>
-    `;
-  }
-};
-
-const getFilterTemplate = (filter) => {
-  if (filter.checked) {
-    return `
-    <input
-      type="radio"
-      id="filter__${filter.name}"  
-      class="filter__input visually-hidden"
-      name="filter"
-      checked
-    />
-    <label for="filter__${filter.name}" class="filter__label">
-      ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
-    >`;
-  } else if (filter.disabled) {
-    return `
-        <input
-      type="radio"
-      id="filter__${filter.name}"  
-      class="filter__input visually-hidden"
-      name="filter"
-      disabled
-    />
-    <label for="filter__${filter.name}" class="filter__label">
-      ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
-    >
-    `;
-  } else {
-    return `
-        <input
-      type="radio"
-      id="filter__${filter.name}"  
-      class="filter__input visually-hidden"
-      name="filter"
-    />
-    <label for="filter__${filter.name}" class="filter__label">
-      ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
-    >
-    `;
-  }
-};
+const getFilterItemTemplate = (filter) => `
+  <input
+    type="radio"
+    id="filter__${filter.name}"  
+    class="filter__input visually-hidden"
+    name="filter"
+    ${filter.isChecked && `checked`}
+    ${filter.isDisabled && `disabled`}
+  />
+  <label for="filter__${filter.name}" class="filter__label">
+    ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
+  >
+`;
 
 const getColorTemplate = (color) => `                                
   <input
@@ -232,56 +46,28 @@ const getColorTemplate = (color) => `
   >
 `;
 
-const getDaysTemplate = (day) => {
-  if (day.checked) {
-    return `
-          <input
-        class="visually-hidden card__repeat-day-input"
-        type="checkbox"
-        id="repeat-${day.name}-1"
-        name="repeat"
-        value="${day.name}"
-        checked
-      />
-      <label class="card__repeat-day" for="repeat-${day.name}-1"
-        >${day.name}</label
-      >`;
-  } else {
-    return `
-      <input
-        class="visually-hidden card__repeat-day-input"
-        type="checkbox"
-        id="repeat-${day.name}-1"
-        name="repeat"
-        value="${day.name}"
-      />
-      <label class="card__repeat-day" for="repeat-${day.name}-1"
-        >${day.name}</label
-      >`;
-  }
-};
-
-const getCardControlTemplate = (cardControl) => {
-  if (cardControl.disabled) {
-    return `
-          <button
-            type="button"
-            class="card__btn card__btn--${cardControl.name} card__btn--disabled"
-          >
-            ${cardControl.name}
-          </button>
-  `;
-  } else {
-    return `
-          <button
-            type="button"
-            class="card__btn card__btn--${cardControl.name}"
-          >
-            ${cardControl.name}
-          </button>
+const getDaysTemplate = (day) => `
+  <input
+    class="visually-hidden card__repeat-day-input"
+    type="checkbox"
+    id="repeat-${day.name}-1"
+    name="repeat"
+    value="${day.name}"
+    ${day.isChecked && `checked`}
+  />
+  <label class="card__repeat-day" for="repeat-${day.name}-1"
+    >${day.name}</label
+  >
 `;
-  }
-};
+
+const getCardControlTemplate = (cardControl) => `
+  <button
+    type="button"
+    class="card__btn card__btn--${cardControl.name} ${cardControl.isDisabled && `card__btn--disabled`}"
+  >
+    ${cardControl.name}
+  </button>
+`;
 
 const getSortFilterTemplate = (type) => `<a href="#" class="board__filter">SORT BY ${type}</a>`;
 
@@ -336,8 +122,7 @@ const getTaskTemplate = (task) => `
   </article>
 `;
 
-// components markup
-const menuTemplate = `
+const getMenuTemplate = () => `
   <section class="control__btn-wrap">
     <input
         type="radio"
@@ -348,11 +133,11 @@ const menuTemplate = `
       <label for="control__new-task" class="control__label control__label--new-task"
         >+ ADD NEW TASK</label
       >
-      ${MENU_ITEMS.map(getMenuTemplate).join(``)}
+      ${MAIN_MENU.map(getMenuItemTemplate).join(``)}
   </section>
 `;
 
-const searchTemplate = `
+const getSearchTemplate = () => `
   <section class="main__search search container">
       <input
         type="text"
@@ -364,127 +149,278 @@ const searchTemplate = `
   </section>
 `;
 
-const filterTemplate = `
+const getFilterTemplate = () => `
   <section class="main__filter filter container">
-    ${FILTER.map(getFilterTemplate).join(``)}
+    ${FILTER.map(getFilterItemTemplate).join(``)}
   </section>
 `;
 
-const filterListTemplate = `
+const getFilterListTemplate = () => `
   <div class="board__filter-list">
       ${SORT_TYPE.map(getSortFilterTemplate).join(``)}
   </div>
 `;
 
-const taskEditTemplate = `<article class="card card--edit card--black">
-                      <form class="card__form" method="get">
-                        <div class="card__inner">
-                          <div class="card__control">
-                          ${CARD_CONTROLS_EDIT.map(getCardControlTemplate).join(``)}
-                          </div>
+const getTaskEditTemplate = () => `
+<article class="card card--edit card--black">
+    <form class="card__form" method="get">
+      <div class="card__inner">
+        <div class="card__control">
+        ${CARD_CONTROLS_EDIT.map(getCardControlTemplate).join(``)}
+        </div>
 
-                          <div class="card__color-bar">
-                            <svg width="100%" height="10">
-                              <use xlink:href="#wave"></use>
-                            </svg>
-                          </div>
+        <div class="card__color-bar">
+          <svg width="100%" height="10">
+            <use xlink:href="#wave"></use>
+          </svg>
+        </div>
 
-                          <div class="card__textarea-wrap">
-                            <label>
-                              <textarea
-                                class="card__text"
-                                placeholder="Start typing your text here..."
-                                name="text"
-                              >This is example of new task, you can add picture, set date and time, add tags.</textarea>
-                            </label>
-                          </div>
+        <div class="card__textarea-wrap">
+          <label>
+            <textarea
+              class="card__text"
+              placeholder="Start typing your text here..."
+              name="text"
+            >This is example of new task, you can add picture, set date and time, add tags.</textarea>
+          </label>
+        </div>
 
-                          <div class="card__settings">
-                            <div class="card__details">
-                              <div class="card__dates">
-                                <button class="card__date-deadline-toggle" type="button">
-                                  date: <span class="card__date-status">no</span>
-                                </button>
+        <div class="card__settings">
+          <div class="card__details">
+            <div class="card__dates">
+              <button class="card__date-deadline-toggle" type="button">
+                date: <span class="card__date-status">no</span>
+              </button>
 
-                                <fieldset class="card__date-deadline" disabled>
-                                  <label class="card__input-deadline-wrap">
-                                    <input
-                                      class="card__date"
-                                      type="text"
-                                      placeholder="23 September"
-                                      name="date"
-                                    />
-                                  </label>
-                                </fieldset>
+              <fieldset class="card__date-deadline" disabled>
+                <label class="card__input-deadline-wrap">
+                  <input
+                    class="card__date"
+                    type="text"
+                    placeholder="23 September"
+                    name="date"
+                  />
+                </label>
+              </fieldset>
 
-                                <button class="card__repeat-toggle" type="button">
-                                  repeat:<span class="card__repeat-status">no</span>
-                                </button>
+              <button class="card__repeat-toggle" type="button">
+                repeat:<span class="card__repeat-status">no</span>
+              </button>
 
-                                <fieldset class="card__repeat-days" disabled>
-                                  <div class="card__repeat-days-inner">
-                                  ${DAYS.map(getDaysTemplate).join(``)}
-                                  </div>
-                                </fieldset>
-                              </div>
+              <fieldset class="card__repeat-days" disabled>
+                <div class="card__repeat-days-inner">
+                ${DAYS.map(getDaysTemplate).join(``)}
+                </div>
+              </fieldset>
+            </div>
 
-                              <div class="card__hashtag">
-                                <div class="card__hashtag-list"></div>
+            <div class="card__hashtag">
+              <div class="card__hashtag-list"></div>
 
-                                <label>
-                                  <input
-                                    type="text"
-                                    class="card__hashtag-input"
-                                    name="hashtag-input"
-                                    placeholder="Type new hashtag here"
-                                  />
-                                </label>
-                              </div>
-                            </div>
+              <label>
+                <input
+                  type="text"
+                  class="card__hashtag-input"
+                  name="hashtag-input"
+                  placeholder="Type new hashtag here"
+                />
+              </label>
+            </div>
+          </div>
 
-                            <div class="card__colors-inner">
-                              <h3 class="card__colors-title">Color</h3>
-                              <div class="card__colors-wrap">
-                              ${COLORS.map(getColorTemplate).join(``)}
-                              </div>
-                            </div>
-                          </div>
+          <div class="card__colors-inner">
+            <h3 class="card__colors-title">Color</h3>
+            <div class="card__colors-wrap">
+            ${COLORS.map(getColorTemplate).join(``)}
+            </div>
+          </div>
+        </div>
 
-                          <div class="card__status-btns">
-                          ${STATUS_BTNS.map(getStatusBtnsTemplate).join(``)}
-                          </div>
-                        </div>
-                      </form>
-                    </article>`;
+        <div class="card__status-btns">
+        ${STATUS_BTNS.map(getStatusBtnsTemplate).join(``)}
+        </div>
+      </div>
+    </form>
+  </article>
+`;
 
-const loadMoreTemplate = `<button class="load-more" type="button">load more</button>`;
+const getLoadMoreTemplate = () => `<button class="load-more" type="button">load more</button>`;
 
 /**
  * Renders component inside container
  * @param {Element} container
  * @param {string} component
+ * @param {string} position for component
  * @return {Element}
  */
-const renderComponent = (container, component) => container.insertAdjacentHTML(`beforeend`, component);
+const renderComponent = (container, component, position = `beforeend`) => container.insertAdjacentHTML(position, component);
 
-renderComponent(controlContainer, menuTemplate);
-renderComponent(mainContainer, searchTemplate);
-renderComponent(mainContainer, filterTemplate);
+const renderBoardContainer = () => {
+  boardContainer.classList.add(`board`, `container`);
+  mainContainer.appendChild(boardContainer);
+};
 
-// create board container
+const renderTasksContainer = () => {
+  tasksContainer.classList.add(`board__tasks`);
+  boardContainer.appendChild(tasksContainer);
+};
+
+const MAIN_MENU = [
+  {
+    name: `tasks`,
+    csstext: `task`,
+    isChecked: false
+  },
+  {
+    name: `statistics`,
+    csstext: `statistic`,
+    isChecked: true
+  }
+];
+const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+const DAYS = [
+  {
+    name: `mo`,
+    isChecked: false
+  },
+  {
+    name: `tu`,
+    isChecked: true
+  },
+  {
+    name: `we`,
+    isChecked: true
+  },
+  {
+    name: `th`,
+    isChecked: false
+  },
+  {
+    name: `fr`,
+    isChecked: false
+  },
+  {
+    name: `sa`,
+    isChecked: true
+  },
+  {
+    name: `su`,
+    isChecked: false
+  }
+];
+const STATUS_BTNS = [
+  {
+    name: `save`,
+    type: `submit`
+  },
+  {
+    name: `delete`,
+    type: `button`
+  }
+];
+const CARD_CONTROLS_EDIT = [
+  {
+    name: `archive`,
+    isDisabled: false
+  },
+  {
+    name: `favorites`,
+    isDisabled: false
+  }
+];
+const FILTER = [
+  {
+    name: `all`,
+    count: 13,
+    isChecked: true,
+    isDisabled: false
+  },
+  {
+    name: `overdue`,
+    count: 0,
+    isChecked: false,
+    isDisabled: true
+  },
+  {
+    name: `today`,
+    count: 0,
+    isChecked: false,
+    isDisabled: true
+  },
+  {
+    name: `favorites`,
+    count: 1,
+    isChecked: false,
+    isDisabled: false
+  },
+  {
+    name: `repeating`,
+    count: 1,
+    isChecked: false,
+    isDisabled: false
+  },
+  {
+    name: `tags`,
+    count: 1,
+    isChecked: false,
+    isDisabled: false
+  },
+  {
+    name: `archive`,
+    count: 115,
+    isChecked: false,
+    isDisabled: false
+  },
+];
+const SORT_TYPE = [`DEFAULT`, `DATE up`, `DATE down`];
+const CARD_CONTROLS = [
+  {
+    name: `edit`,
+    isDisabled: false
+  },
+  {
+    name: `archive`,
+    isDisabled: false
+  },
+  {
+    name: `favorites`,
+    isDisabled: true
+  }
+];
+const TASKS = [
+  {
+    text: `Example default task with ${COLORS[0]} color.`,
+    color: `${COLORS[0]}`,
+    date: `23 September`,
+    time: `11:15 PM`,
+    hashtag: [`personal`, `important`]
+  },
+  {
+    text: `Example default task with ${COLORS[1]} color.`,
+    color: `${COLORS[1]}`,
+    date: `24 September`,
+    time: `11:30 PM`,
+    hashtag: [`todo`, `personal`, `important`]
+  },
+  {
+    text: `Example default task with ${COLORS[4]} color.`,
+    color: `${COLORS[4]}`,
+    date: `25 September`,
+    time: `11:50 PM`,
+    hashtag: [`todo`, `important`]
+  }
+];
+const mainContainer = document.querySelector(`.main`);
+const controlContainer = document.querySelector(`.control`);
 const boardContainer = document.createElement(`section`);
-boardContainer.classList.add(`board`, `container`);
-mainContainer.appendChild(boardContainer);
-
-renderComponent(boardContainer, filterListTemplate);
-
-// create tasks container
 const tasksContainer = document.createElement(`div`);
-tasksContainer.classList.add(`board__tasks`);
-boardContainer.appendChild(tasksContainer);
 
-renderComponent(tasksContainer, taskEditTemplate);
+renderComponent(controlContainer, getMenuTemplate());
+renderComponent(mainContainer, getSearchTemplate());
+renderComponent(mainContainer, getFilterTemplate());
+renderBoardContainer();
+renderComponent(boardContainer, getFilterListTemplate(), `afterbegin`);
+renderTasksContainer();
+renderComponent(tasksContainer, getTaskEditTemplate());
 TASKS.forEach((el) => renderComponent(tasksContainer, getTaskTemplate(el)));
-renderComponent(boardContainer, loadMoreTemplate);
-
-
+renderComponent(boardContainer, getLoadMoreTemplate());
