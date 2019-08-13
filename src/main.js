@@ -13,20 +13,20 @@ const getMenuItemTemplate = (menuItem) => `
     class="control__input visually-hidden"
     ${menuItem.isChecked && `checked`}
   />
-  <label for="control__${menuItem.csstext}" class="control__label">${menuItem.name.toUpperCase()}</label>
+  <label for="control__${menuItem.csstext}" class="control__label ${(menuItem.csstext === `new-task`) ? `control__label--new-task` : ``}">${menuItem.name.toUpperCase()}</label>
 `;
 
-const getFilterItemTemplate = (filter) => `
+const getFilterItemTemplate = (filterItem) => `
   <input
     type="radio"
-    id="filter__${filter.name}"  
+    id="filter__${filterItem.name}"  
     class="filter__input visually-hidden"
     name="filter"
-    ${filter.isChecked && `checked`}
-    ${filter.isDisabled && `disabled`}
+    ${filterItem.isChecked && `checked`}
+    ${filterItem.isDisabled && `disabled`}
   />
-  <label for="filter__${filter.name}" class="filter__label">
-    ${filter.name} <span class="filter__${filter.name}-count">${filter.count}</span></label
+  <label for="filter__${filterItem.name}" class="filter__label">
+    ${filterItem.name} <span class="filter__${filterItem.name}-count">${filterItem.count}</span></label
   >
 `;
 
@@ -86,7 +86,7 @@ const getTaskTemplate = (task) => `
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
-        ${CARD_CONTROLS.map(getCardControlTemplate).join(``)}
+        ${cardControls.map(getCardControlTemplate).join(``)}
         </div>
 
         <div class="card__color-bar">
@@ -122,18 +122,9 @@ const getTaskTemplate = (task) => `
   </article>
 `;
 
-const getMenuTemplate = () => `
+const getMenuTemplate = (menuData) => `
   <section class="control__btn-wrap">
-    <input
-        type="radio"
-        name="control"
-        id="control__new-task"
-        class="control__input visually-hidden"
-      />
-      <label for="control__new-task" class="control__label control__label--new-task"
-        >+ ADD NEW TASK</label
-      >
-      ${MAIN_MENU.map(getMenuItemTemplate).join(``)}
+    ${Object.keys(menuData).map((el) => getMenuItemTemplate(menuData[el])).join(``)}
   </section>
 `;
 
@@ -149,15 +140,22 @@ const getSearchTemplate = () => `
   </section>
 `;
 
-const getFilterTemplate = () => `
+const getFilterTemplate = (filterData) => `
   <section class="main__filter filter container">
-    ${FILTER.map(getFilterItemTemplate).join(``)}
+    ${Object.keys(filterData).map((el) => getFilterItemTemplate(filterData[el])).join(``)}
   </section>
 `;
 
+const getSearchAndFilterTemplate = (filterData) => {
+  const joinedTemplate = [];
+  joinedTemplate.push(getSearchTemplate());
+  joinedTemplate.push(getFilterTemplate(filterData));
+  return joinedTemplate.join(``);
+};
+
 const getFilterListTemplate = () => `
   <div class="board__filter-list">
-      ${SORT_TYPE.map(getSortFilterTemplate).join(``)}
+      ${sortType.map((el) => getSortFilterTemplate(el[name])).join(``)}
   </div>
 `;
 
@@ -166,7 +164,7 @@ const getTaskEditTemplate = () => `
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
-        ${CARD_CONTROLS_EDIT.map(getCardControlTemplate).join(``)}
+        ${cardControlsEdit.map(getCardControlTemplate).join(``)}
         </div>
 
         <div class="card__color-bar">
@@ -209,7 +207,7 @@ const getTaskEditTemplate = () => `
 
               <fieldset class="card__repeat-days" disabled>
                 <div class="card__repeat-days-inner">
-                ${DAYS.map(getDaysTemplate).join(``)}
+                ${days.map(getDaysTemplate).join(``)}
                 </div>
               </fieldset>
             </div>
@@ -231,20 +229,29 @@ const getTaskEditTemplate = () => `
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-            ${COLORS.map(getColorTemplate).join(``)}
+            ${colors.map(getColorTemplate).join(``)}
             </div>
           </div>
         </div>
 
         <div class="card__status-btns">
-        ${STATUS_BTNS.map(getStatusBtnsTemplate).join(``)}
+        ${statusBtns.map(getStatusBtnsTemplate).join(``)}
         </div>
       </div>
     </form>
   </article>
 `;
 
-const getLoadMoreTemplate = () => `<button class="load-more" type="button">load more</button>`;
+const getLoadTemplate = () => `<button class="load-more" type="button">load more</button>`;
+
+const getTasksTemplate = (tasksData) => tasksData.map(getTaskTemplate).join(``);
+
+const getTaskEditAndTasksTemplate = (tasksData) => {
+  const joinedTemplate = [];
+  joinedTemplate.push(getTaskEditTemplate());
+  joinedTemplate.push(getTasksTemplate(tasksData));
+  return joinedTemplate.join(``);
+};
 
 /**
  * Renders component inside container
@@ -258,27 +265,34 @@ const renderComponent = (container, component, position = `beforeend`) => contai
 const renderBoardContainer = () => {
   boardContainer.classList.add(`board`, `container`);
   mainContainer.appendChild(boardContainer);
+  return boardContainer;
 };
 
 const renderTasksContainer = () => {
   tasksContainer.classList.add(`board__tasks`);
   boardContainer.appendChild(tasksContainer);
+  return tasksContainer;
 };
 
-const MAIN_MENU = [
-  {
+const mainMenu = {
+  newTask: {
+    name: `+ add new task`,
+    csstext: `new-task`,
+    isChecked: false
+  },
+  tasks: {
     name: `tasks`,
     csstext: `task`,
     isChecked: false
   },
-  {
+  statistics: {
     name: `statistics`,
     csstext: `statistic`,
     isChecked: true
   }
-];
-const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
-const DAYS = [
+};
+const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
+const days = [
   {
     name: `mo`,
     isChecked: false
@@ -308,7 +322,7 @@ const DAYS = [
     isChecked: false
   }
 ];
-const STATUS_BTNS = [
+const statusBtns = [
   {
     name: `save`,
     type: `submit`
@@ -318,7 +332,7 @@ const STATUS_BTNS = [
     type: `button`
   }
 ];
-const CARD_CONTROLS_EDIT = [
+const cardControlsEdit = [
   {
     name: `archive`,
     isDisabled: false
@@ -328,52 +342,65 @@ const CARD_CONTROLS_EDIT = [
     isDisabled: false
   }
 ];
-const FILTER = [
-  {
+const filter = {
+  all: {
     name: `all`,
     count: 13,
     isChecked: true,
     isDisabled: false
   },
-  {
+  overdue: {
     name: `overdue`,
     count: 0,
     isChecked: false,
     isDisabled: true
   },
-  {
+  today: {
     name: `today`,
     count: 0,
     isChecked: false,
     isDisabled: true
   },
-  {
+  favorites: {
     name: `favorites`,
     count: 1,
     isChecked: false,
     isDisabled: false
   },
-  {
+  repeating: {
     name: `repeating`,
     count: 1,
     isChecked: false,
     isDisabled: false
   },
-  {
+  tags: {
     name: `tags`,
     count: 1,
     isChecked: false,
     isDisabled: false
   },
-  {
+  archive: {
     name: `archive`,
     count: 115,
     isChecked: false,
     isDisabled: false
+  }
+};
+const sortType = [
+  {
+    name: `DEFAULT`,
+    href: ``
   },
+  {
+    name: `DATE up`,
+    href: ``
+  },
+  {
+    name: `DATE down`,
+    href: ``
+  }
 ];
-const SORT_TYPE = [`DEFAULT`, `DATE up`, `DATE down`];
-const CARD_CONTROLS = [
+const cardControls = [
   {
     name: `edit`,
     isDisabled: false
@@ -387,24 +414,24 @@ const CARD_CONTROLS = [
     isDisabled: true
   }
 ];
-const TASKS = [
+const tasks = [
   {
-    text: `Example default task with ${COLORS[0]} color.`,
-    color: `${COLORS[0]}`,
+    text: `Example default task with ${colors[0]} color.`,
+    color: `${colors[0]}`,
     date: `23 September`,
     time: `11:15 PM`,
     hashtag: [`personal`, `important`]
   },
   {
-    text: `Example default task with ${COLORS[1]} color.`,
-    color: `${COLORS[1]}`,
+    text: `Example default task with ${colors[1]} color.`,
+    color: `${colors[1]}`,
     date: `24 September`,
     time: `11:30 PM`,
     hashtag: [`todo`, `personal`, `important`]
   },
   {
-    text: `Example default task with ${COLORS[4]} color.`,
-    color: `${COLORS[4]}`,
+    text: `Example default task with ${colors[4]} color.`,
+    color: `${colors[4]}`,
     date: `25 September`,
     time: `11:50 PM`,
     hashtag: [`todo`, `important`]
@@ -415,12 +442,8 @@ const controlContainer = document.querySelector(`.control`);
 const boardContainer = document.createElement(`section`);
 const tasksContainer = document.createElement(`div`);
 
-renderComponent(controlContainer, getMenuTemplate());
-renderComponent(mainContainer, getSearchTemplate());
-renderComponent(mainContainer, getFilterTemplate());
-renderBoardContainer();
-renderComponent(boardContainer, getFilterListTemplate(), `afterbegin`);
-renderTasksContainer();
-renderComponent(tasksContainer, getTaskEditTemplate());
-TASKS.forEach((el) => renderComponent(tasksContainer, getTaskTemplate(el)));
-renderComponent(boardContainer, getLoadMoreTemplate());
+renderComponent(controlContainer, getMenuTemplate(mainMenu));
+renderComponent(mainContainer, getSearchAndFilterTemplate(filter));
+renderComponent(renderBoardContainer(), getFilterListTemplate());
+renderComponent(renderTasksContainer(), getTaskEditAndTasksTemplate(tasks));
+renderComponent(boardContainer, getLoadTemplate());
