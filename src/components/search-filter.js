@@ -15,11 +15,11 @@ const getSearchTemplate = () => `
 `;
 
 /**
- * Gets filter item template
+ * Gets filter template
  * @param {Object} filterItem
  * @return {string}
  */
-const getFilterItemTemplate = (filterItem) => `
+const getFilterTemplate = (filterItem) => `
   <input
     type="radio"
     id="filter__${filterItem.name}"  
@@ -34,25 +34,25 @@ const getFilterItemTemplate = (filterItem) => `
 `;
 
 /**
- * Gets filter template
+ * Gets filters template
  * @param {Object} filterData
  * @return {string}
  */
-const getFilterTemplate = (filterData) => `
+const getFiltersTemplate = (filterData) => `
   <section class="main__filter filter container">
-    ${Object.keys(filterData).map((el) => getFilterItemTemplate(filterData[el])).join(``)}
+    ${Object.keys(filterData).map((el) => getFilterTemplate(filterData[el])).join(``)}
   </section>
 `;
 
 /**
- * Gets search and filter template
+ * Gets search and filters template
  * @param {Object} filterData
  * @return {string}
  */
-const getSearchAndFilterTemplate = (filterData) => {
+const getSearchAndFiltersTemplate = (filterData) => {
   const joinedTemplate = [];
   joinedTemplate.push(getSearchTemplate());
-  joinedTemplate.push(getFilterTemplate(filterData));
+  joinedTemplate.push(getFiltersTemplate(filterData));
   return joinedTemplate.join(``);
 };
 
@@ -101,4 +101,4 @@ const filter = {
   }
 };
 
-export {getSearchAndFilterTemplate, filter};
+export {getSearchAndFiltersTemplate, filter};
