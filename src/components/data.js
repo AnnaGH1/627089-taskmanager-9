@@ -1,3 +1,5 @@
+import {getRandEls} from "./util";
+
 /**
  * Gets random task
  * @return {{repeatingDays: {}, color: *, dueDate: number, text: *, tags: *}}
@@ -10,7 +12,7 @@ const getTask = () => (
       `Eat something`,
     ][Math.floor(Math.random() * 3)],
     dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
-    tags: new Set([`personal`, `important`]),
+    tags: new Set(getRandEls(tags, TAGS_MAX)),
     repeatingDays: {
       [days[0]]: Boolean(Math.round(Math.random())),
       [days[1]]: Boolean(Math.round(Math.random())),
@@ -21,36 +23,16 @@ const getTask = () => (
       [days[6]]: false,
     },
     color: colors[Math.floor(Math.random() * 5)],
+    isFavorite: Boolean(Math.round(Math.random())),
+    isArchive: Boolean(Math.round(Math.random())),
   }
 );
 
 const TASKS_COUNT = 5;
+const TAGS_MAX = 3;
 const days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
-const cardControlsViewMode = [
-  {
-    name: `edit`,
-    isDisabled: false
-  },
-  {
-    name: `archive`,
-    isDisabled: false
-  },
-  {
-    name: `favorites`,
-    isDisabled: true
-  }
-];
-const cardControlsEditMode = [
-  {
-    name: `archive`,
-    isDisabled: false
-  },
-  {
-    name: `favorites`,
-    isDisabled: false
-  }
-];
+const tags = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
 const statusBtns = [
   {
     name: `save`,
@@ -63,4 +45,4 @@ const statusBtns = [
 ];
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
 
-export {days, colors, cardControlsViewMode, cardControlsEditMode, statusBtns, tasks};
+export {days, colors, statusBtns, tasks};

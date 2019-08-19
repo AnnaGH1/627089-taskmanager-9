@@ -1,22 +1,31 @@
-import {getCardControlTemplate} from './card-control.js';
 import {getDayTemplate} from './days.js';
 import {getColorTemplate} from './colors.js';
 import {getStatusBtnsTemplate} from './status-btns.js';
 
 /**
  * Gets task edit template
- * @param {Array} cardControls
  * @param {Array} days
  * @param {Array} colors
  * @param {Array} statusBtns
  * @return {string}
  */
-const getTaskEditTemplate = (cardControls, days, colors, statusBtns) => `
+const getTaskEditTemplate = (days, colors, statusBtns) => `
 <article class="card card--edit card--black">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
-        ${cardControls.map(getCardControlTemplate).join(``)}
+          <button
+            type="button"
+            class="card__btn card__btn--archive"
+          >
+            archive
+          </button>
+          <button
+            type="button"
+            class="card__btn card__btn--favorites"
+          >
+            favorites
+          </button>
         </div>
 
         <div class="card__color-bar">

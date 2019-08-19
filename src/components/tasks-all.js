@@ -1,6 +1,6 @@
 import {getTaskEditTemplate} from './task-edit.js';
 import {getTasksTemplate} from './tasks.js';
-import {days, colors, cardControlsEditMode, statusBtns, tasks} from './data.js';
+import {days, colors, statusBtns, tasks} from './data.js';
 
 /**
  * Gets task edit and tasks template
@@ -8,7 +8,7 @@ import {days, colors, cardControlsEditMode, statusBtns, tasks} from './data.js';
  */
 const getTaskEditAndTasksTemplate = () => {
   const joinedTemplate = [];
-  joinedTemplate.push(getTaskEditTemplate(cardControlsEditMode, days, colors, statusBtns));
+  joinedTemplate.push(getTaskEditTemplate(days, colors, statusBtns));
   joinedTemplate.push(getTasksTemplate(tasks));
   return joinedTemplate.join(``);
 };

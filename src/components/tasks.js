@@ -1,6 +1,3 @@
-import {getCardControlTemplate} from './card-control.js';
-import {cardControlsViewMode} from './data.js';
-
 /**
  * Gets tag template
  * @param {string} tag
@@ -19,12 +16,29 @@ const getTagTemplate = (tag) => `
  * @param {Object} task
  * @return {string}
  */
-const getTaskTemplate = ({text, dueDate, repeatingDays, tags, color}) => `
+const getTaskTemplate = ({text, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) => `
   <article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
-        ${cardControlsViewMode.map(getCardControlTemplate).join(``)}
+          <button
+            type="button"
+            class="card__btn card__btn--edit"
+          >
+            edit
+          </button>
+          <button
+            type="button"
+            class="card__btn card__btn--archive ${isArchive && `card__btn--disabled`}"
+          >
+            archive
+          </button>
+          <button
+            type="button"
+            class="card__btn card__btn--favorites ${isFavorite && `card__btn--disabled`}"
+          >
+            favorites
+          </button>
         </div>
 
         <div class="card__color-bar">
