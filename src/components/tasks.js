@@ -2,13 +2,13 @@ import {getCardControlTemplate, cardControls} from './card-control.js';
 
 /**
  * Gets hashtag template
- * @param {string} hashtag
+ * @param {string} tag
  * @return {string}
  */
-const getHashtagTemplate = (hashtag) => `
+const getTagTemplate = (tag) => `
   <span class="card__hashtag-inner">
     <span class="card__hashtag-name">
-      #${hashtag}
+      #${tag}
     </span>
   </span>
 `;
@@ -18,8 +18,8 @@ const getHashtagTemplate = (hashtag) => `
  * @param {Object} task
  * @return {string}
  */
-const getTaskTemplate = (task) => `
-  <article class="card card--${task.color}">
+const getTaskTemplate = ({text, dueDate, repeatingDays, tags, color}) => `
+  <article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
@@ -33,7 +33,7 @@ const getTaskTemplate = (task) => `
         </div>
 
         <div class="card__textarea-wrap">
-          <p class="card__text">${task.text}</p>
+          <p class="card__text">${text}</p>
         </div>
 
         <div class="card__settings">
@@ -41,15 +41,14 @@ const getTaskTemplate = (task) => `
             <div class="card__dates">
               <div class="card__date-deadline">
                 <p class="card__input-deadline-wrap">
-                  <span class="card__date">${task.date}</span>
-                  <span class="card__time">${task.time}</span>
+                  <span class="card__date">${new Date(dueDate).toDateString()}</span>
                 </p>
               </div>
             </div>
 
             <div class="card__hashtag">
               <div class="card__hashtag-list">
-              ${task.hashtag.map(getHashtagTemplate).join(``)}
+              ${Array.from(tags).map(getTagTemplate).join(``)}
               </div>
             </div>
           </div>
@@ -61,10 +60,10 @@ const getTaskTemplate = (task) => `
 
 /**
  * Gets task template
- * @param {Array} tasks
+ * @param {Array.<Object>} tasksData
  * @return {string}
  */
-const getTasksTemplate = (tasks) => tasks.map(getTaskTemplate).join(``);
+const getTasksTemplate = (tasksData) => tasksData.map(getTaskTemplate).join(``);
 
 
 export {getTasksTemplate};
