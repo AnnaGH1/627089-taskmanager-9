@@ -12,19 +12,4 @@ const getCardControlTemplate = (cardControl) => `
   </button>
 `;
 
-const cardControls = [
-  {
-    name: `edit`,
-    isDisabled: false
-  },
-  {
-    name: `archive`,
-    isDisabled: false
-  },
-  {
-    name: `favorites`,
-    isDisabled: true
-  }
-];
-
-export {getCardControlTemplate, cardControls};
+export {getCardControlTemplate};

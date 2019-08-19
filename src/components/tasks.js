@@ -1,7 +1,8 @@
-import {getCardControlTemplate, cardControls} from './card-control.js';
+import {getCardControlTemplate} from './card-control.js';
+import {cardControlsViewMode} from './data.js';
 
 /**
- * Gets hashtag template
+ * Gets tag template
  * @param {string} tag
  * @return {string}
  */
@@ -23,7 +24,7 @@ const getTaskTemplate = ({text, dueDate, repeatingDays, tags, color}) => `
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
-        ${cardControls.map(getCardControlTemplate).join(``)}
+        ${cardControlsViewMode.map(getCardControlTemplate).join(``)}
         </div>
 
         <div class="card__color-bar">

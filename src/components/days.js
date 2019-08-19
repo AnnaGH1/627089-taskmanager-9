@@ -7,15 +7,13 @@ const getDayTemplate = (day) => `
   <input
     class="visually-hidden card__repeat-day-input"
     type="checkbox"
-    id="repeat-${day.name}-1"
+    id="repeat-${day}-1"
     name="repeat"
-    value="${day.name}"
-    ${day.isChecked && `checked`}
+    value="${day}"
   />
-  <label class="card__repeat-day" for="repeat-${day.name}-1"
-    >${day.name}</label
+  <label class="card__repeat-day" for="repeat-${day}-1"
+    >${day}</label
   >
 `;
-
 
 export {getDayTemplate};

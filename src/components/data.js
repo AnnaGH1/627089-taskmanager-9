@@ -1,12 +1,6 @@
 /**
  * Gets random task
- * @return {{
- * repeatingDays: {tu: *, mo: *, su: boolean, th: *, fr: boolean, we: *, sa: boolean},
- * color: *,
- * dueDate: number,
- * text: *,
- * tags: *
- * }}
+ * @return {{repeatingDays: {}, color: *, dueDate: number, text: *, tags: *}}
  */
 const getTask = () => (
   {
@@ -18,16 +12,55 @@ const getTask = () => (
     dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
     tags: new Set([`personal`, `important`]),
     repeatingDays: {
-      'mo': Boolean(Math.round(Math.random())),
-      'tu': Boolean(Math.round(Math.random())),
-      'we': Boolean(Math.round(Math.random())),
-      'th': Boolean(Math.round(Math.random())),
-      'fr': false,
-      'sa': false,
-      'su': false,
+      [days[0]]: Boolean(Math.round(Math.random())),
+      [days[1]]: Boolean(Math.round(Math.random())),
+      [days[2]]: Boolean(Math.round(Math.random())),
+      [days[3]]: Boolean(Math.round(Math.random())),
+      [days[4]]: false,
+      [days[5]]: false,
+      [days[6]]: false,
     },
-    color: [`black`, `yellow`, `blue`, `green`, `pink`][Math.floor(Math.random() * 5)],
+    color: colors[Math.floor(Math.random() * 5)],
   }
 );
 
-export {getTask};
+const TASKS_COUNT = 5;
+const days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
+const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
+const cardControlsViewMode = [
+  {
+    name: `edit`,
+    isDisabled: false
+  },
+  {
+    name: `archive`,
+    isDisabled: false
+  },
+  {
+    name: `favorites`,
+    isDisabled: true
+  }
+];
+const cardControlsEditMode = [
+  {
+    name: `archive`,
+    isDisabled: false
+  },
+  {
+    name: `favorites`,
+    isDisabled: false
+  }
+];
+const statusBtns = [
+  {
+    name: `save`,
+    type: `submit`
+  },
+  {
+    name: `delete`,
+    type: `button`
+  }
+];
+const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
+
+export {days, colors, cardControlsViewMode, cardControlsEditMode, statusBtns, tasks};

@@ -5,18 +5,18 @@ import {getStatusBtnsTemplate} from './status-btns.js';
 
 /**
  * Gets task edit template
- * @param {Array} cardControlsEdit
+ * @param {Array} cardControls
  * @param {Array} days
  * @param {Array} colors
  * @param {Array} statusBtns
  * @return {string}
  */
-const getTaskEditTemplate = (cardControlsEdit, days, colors, statusBtns) => `
+const getTaskEditTemplate = (cardControls, days, colors, statusBtns) => `
 <article class="card card--edit card--black">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
-        ${cardControlsEdit.map(getCardControlTemplate).join(``)}
+        ${cardControls.map(getCardControlTemplate).join(``)}
         </div>
 
         <div class="card__color-bar">
@@ -31,7 +31,7 @@ const getTaskEditTemplate = (cardControlsEdit, days, colors, statusBtns) => `
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >This is example of new task, you can add picture, set date and time, add tags.</textarea>
+            ></textarea>
           </label>
         </div>
 
