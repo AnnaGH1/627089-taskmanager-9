@@ -3,14 +3,39 @@ import {getColorTemplate} from './colors.js';
 import {getStatusBtnsTemplate} from './status-btns.js';
 
 /**
+ * Checks if task is repeating
+ * @param {Object} taskRepeatingDays
+ * @return {boolean}
+ */
+const checkIfRepeating = (taskRepeatingDays) => Object.keys(taskRepeatingDays).some((day) => taskRepeatingDays[day]);
+
+const getHashtagTemplate = (name) => `
+    <span class="card__hashtag-inner">
+      <input
+        type="hidden"
+        name="hashtag"
+        value="repeat"
+        class="card__hashtag-hidden-input"
+      />
+      <p class="card__hashtag-name">
+        #${name}
+      </p>
+      <button type="button" class="card__hashtag-delete">
+        delete
+      </button>
+    </span>
+`;
+
+/**
  * Gets task edit template
  * @param {Array} days
  * @param {Array} colors
  * @param {Array} statusBtns
+ * @param {Object} task
  * @return {string}
  */
-const getTaskEditTemplate = (days, colors, statusBtns) => `
-<article class="card card--edit card--black">
+const getTaskEditTemplate = (days, colors, statusBtns, task) => `
+<article class="card card--edit card--${task.color}" >
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -40,7 +65,7 @@ const getTaskEditTemplate = (days, colors, statusBtns) => `
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            ></textarea>
+            >${task.text}</textarea>
           </label>
         </div>
 
@@ -48,33 +73,36 @@ const getTaskEditTemplate = (days, colors, statusBtns) => `
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">no</span>
+                date: <span class="card__date-status">${task.dueDate ? `yes` : `no`}</span>
               </button>
 
-              <fieldset class="card__date-deadline" disabled>
+              <fieldset class="card__date-deadline" ${task.dueDate ? `` : `disabled`}>
                 <label class="card__input-deadline-wrap">
                   <input
                     class="card__date"
                     type="text"
                     placeholder="23 September"
                     name="date"
+                    value="${task.dueDate ? new Date(task.dueDate).toDateString() : ``}"
                   />
                 </label>
               </fieldset>
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">no</span>
+                repeat:<span class="card__repeat-status">${checkIfRepeating(task.repeatingDays) ? `yes` : `no`}</span>
               </button>
 
-              <fieldset class="card__repeat-days" disabled>
+              <fieldset class="card__repeat-days" ${checkIfRepeating(task.repeatingDays) ? `` : `disabled`}>
                 <div class="card__repeat-days-inner">
-                ${days.map(getDayTemplate).join(``)}
+                ${Object.keys(task.repeatingDays).map(getDayTemplate).join(``)}
                 </div>
               </fieldset>
             </div>
 
             <div class="card__hashtag">
-              <div class="card__hashtag-list"></div>
+              <div class="card__hashtag-list">
+                ${Array.from(task.tags).map(getHashtagTemplate).join(``)}
+              </div>
 
               <label>
                 <input

@@ -8,7 +8,7 @@ import {days, colors, statusBtns, tasks} from './data.js';
  */
 const getTaskEditAndTasksTemplate = () => {
   const joinedTemplate = [];
-  joinedTemplate.push(getTaskEditTemplate(days, colors, statusBtns));
+  joinedTemplate.push(getTaskEditTemplate(days, colors, statusBtns, tasks[0]));
   joinedTemplate.push(getTasksTemplate(tasks));
   return joinedTemplate.join(``);
 };
