@@ -1,4 +1,5 @@
 import {getRandEls} from "./util";
+import {getCountByFlag, getCountWithTags, getCountRepeating, getCountDueToday, getCountOverdue} from "./search-filter.js";
 
 /**
  * Gets random task
@@ -44,5 +45,49 @@ const statusBtns = [
   }
 ];
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
+const filters = [
+  {
+    title: `all`,
+    count: getCountByFlag(tasks, `text`),
+    isChecked: true,
+    isDisabled: false
+  },
+  {
+    title: `overdue`,
+    count: getCountOverdue(tasks),
+    isChecked: false,
+    isDisabled: true
+  },
+  {
+    title: `today`,
+    count: getCountDueToday(tasks),
+    isChecked: false,
+    isDisabled: true
+  },
+  {
+    title: `favorites`,
+    count: getCountByFlag(tasks, `isFavorite`),
+    isChecked: false,
+    isDisabled: false
+  },
+  {
+    title: `repeating`,
+    count: getCountRepeating(tasks, days),
+    isChecked: false,
+    isDisabled: false
+  },
+  {
+    title: `tags`,
+    count: getCountWithTags(tasks),
+    isChecked: false,
+    isDisabled: false
+  },
+  {
+    title: `archive`,
+    count: getCountByFlag(tasks, `isArchive`),
+    isChecked: false,
+    isDisabled: false
+  }
+];
 
-export {days, colors, statusBtns, tasks};
+export {days, colors, statusBtns, tasks, filters};
