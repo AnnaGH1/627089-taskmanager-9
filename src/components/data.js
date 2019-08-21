@@ -29,7 +29,8 @@ const getTask = () => (
   }
 );
 
-const TASKS_COUNT = 16;
+const TASKS_COUNT = 18;
+const TASKS_PER_PAGE = 8;
 const TAGS_MAX = 3;
 const days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
@@ -80,4 +81,4 @@ const filters = [
   }
 ];
 
-export {days, colors, tasks, filters};
+export {days, colors, tasks, filters, TASKS_PER_PAGE};

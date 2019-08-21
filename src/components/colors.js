@@ -1,4 +1,4 @@
-import {taskEditMode} from "./tasks";
+import {taskEditMode} from "./tasks-all.js";
 
 /**
  * Checks if the current color is the color of the task in edit mode
