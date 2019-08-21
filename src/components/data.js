@@ -29,21 +29,11 @@ const getTask = () => (
   }
 );
 
-const TASKS_COUNT = 5;
+const TASKS_COUNT = 16;
 const TAGS_MAX = 3;
 const days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
 const tags = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
-const statusBtns = [
-  {
-    name: `save`,
-    type: `submit`
-  },
-  {
-    name: `delete`,
-    type: `button`
-  }
-];
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
 const filters = [
   {
@@ -90,4 +80,4 @@ const filters = [
   }
 ];
 
-export {days, colors, statusBtns, tasks, filters};
+export {days, colors, tasks, filters};

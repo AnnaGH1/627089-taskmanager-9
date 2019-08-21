@@ -1,3 +1,5 @@
+import {tasks} from "./data";
+
 /**
  * Gets tag template
  * @param {string} tag
@@ -80,5 +82,7 @@ const getTaskTemplate = ({text, dueDate, repeatingDays, tags, color, isFavorite,
  */
 const getTasksTemplate = (tasksData) => tasksData.map(getTaskTemplate).join(``);
 
+const taskEditMode = tasks[0];
+let tasksViewMode = tasks.slice(1, 8);
 
-export {getTasksTemplate};
+export {getTasksTemplate, taskEditMode, tasksViewMode};

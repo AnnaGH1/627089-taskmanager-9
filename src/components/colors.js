@@ -1,3 +1,13 @@
+import {taskEditMode} from "./tasks";
+
+/**
+ * Checks if the current color is the color of the task in edit mode
+ * @param {string} color
+ * @param {string} currentTaskColor
+ * @return {string}
+ */
+const checkTaskColor = (color, currentTaskColor) => color === currentTaskColor ? `checked` : ``;
+
 /**
  * Gets color template
  * @param {string} color
@@ -10,7 +20,7 @@ const getColorTemplate = (color) => `
     class="card__color-input card__color-input--${color} visually-hidden"
     name="color"
     value="${color}"
-    checked
+    ${checkTaskColor(color, taskEditMode.color)}
   />
   <label
     for="color-${color}-1"
@@ -18,6 +28,5 @@ const getColorTemplate = (color) => `
     >${color}</label
   >
 `;
-
 
 export {getColorTemplate};
