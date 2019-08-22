@@ -1,21 +1,21 @@
 /**
  * Gets day template
- * @param {Object} day
+ * @param {string} key
+ * @param {boolean} value
  * @return {string}
  */
-const getDayTemplate = (day) => `
+const getDayTemplate = ([key, value]) => `
   <input
     class="visually-hidden card__repeat-day-input"
     type="checkbox"
-    id="repeat-${day.name}-1"
+    id="repeat-${key}-1"
     name="repeat"
-    value="${day.name}"
-    ${day.isChecked && `checked`}
+    value="${key}"
+    ${value ? `checked` : ``}
   />
-  <label class="card__repeat-day" for="repeat-${day.name}-1"
-    >${day.name}</label
+  <label class="card__repeat-day" for="repeat-${key}-1"
+    >${key}</label
   >
 `;
-
 
 export {getDayTemplate};

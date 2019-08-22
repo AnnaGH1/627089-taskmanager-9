@@ -19,17 +19,17 @@ const getSearchTemplate = () => `
  * @param {Object} filterItem
  * @return {string}
  */
-const getFilterTemplate = (filterItem) => `
+const getFilterTemplate = ({title, count, isChecked, isDisabled}) => `
   <input
     type="radio"
-    id="filter__${filterItem.name}"  
+    id="filter__${title}"  
     class="filter__input visually-hidden"
     name="filter"
-    ${filterItem.isChecked && `checked`}
-    ${filterItem.isDisabled && `disabled`}
+    ${isChecked && `checked`}
+    ${isDisabled && `disabled`}
   />
-  <label for="filter__${filterItem.name}" class="filter__label">
-    ${filterItem.name} <span class="filter__${filterItem.name}-count">${filterItem.count}</span></label
+  <label for="filter__${title}" class="filter__label">
+    ${title} <span class="filter__${title}-count">${count}</span></label
   >
 `;
 
@@ -40,7 +40,7 @@ const getFilterTemplate = (filterItem) => `
  */
 const getFiltersTemplate = (filterData) => `
   <section class="main__filter filter container">
-    ${Object.keys(filterData).map((el) => getFilterTemplate(filterData[el])).join(``)}
+    ${filterData.map(getFilterTemplate).join(``)}
   </section>
 `;
 
@@ -56,49 +56,45 @@ const getSearchAndFiltersTemplate = (filterData) => {
   return joinedTemplate.join(``);
 };
 
-const filter = {
-  all: {
-    name: `all`,
-    count: 13,
-    isChecked: true,
-    isDisabled: false
-  },
-  overdue: {
-    name: `overdue`,
-    count: 0,
-    isChecked: false,
-    isDisabled: true
-  },
-  today: {
-    name: `today`,
-    count: 0,
-    isChecked: false,
-    isDisabled: true
-  },
-  favorites: {
-    name: `favorites`,
-    count: 1,
-    isChecked: false,
-    isDisabled: false
-  },
-  repeating: {
-    name: `repeating`,
-    count: 1,
-    isChecked: false,
-    isDisabled: false
-  },
-  tags: {
-    name: `tags`,
-    count: 1,
-    isChecked: false,
-    isDisabled: false
-  },
-  archive: {
-    name: `archive`,
-    count: 115,
-    isChecked: false,
-    isDisabled: false
-  }
+/**
+ * Counts tasks by flag
+ * @param {Array} tasksList
+ * @param {string} flag
+ * @return {number}
+ */
+const getCountByFlag = (tasksList, flag) => tasksList.filter((el) => el[flag]).length;
+
+/**
+ * Counts tasks with tags
+ * @param {Array} tasksList
+ * @return {number}
+ */
+const getCountWithTags = (tasksList) => tasksList.filter((el) => Array.from(el.tags).length > 1).length;
+
+/**
+ * Counts repeating tasks
+ * @param {Array} tasksList
+ * @param {Array} daysList
+ * @return {number}
+ */
+const getCountRepeating = (tasksList, daysList) => {
+  let count = 0;
+  tasksList.forEach((el) => daysList.some((day) => el.repeatingDays[day]) ? count++ : count);
+  return count;
 };
 
-export {getSearchAndFiltersTemplate, filter};
+/**
+ * Counts tasks due today
+ * @param {Array} tasksList
+ * @return {number}
+ */
+const getCountDueToday = (tasksList) => tasksList.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
+
+/**
+ * Counts tasks overdue
+ * @param {Array} tasksList
+ * @return {number}
+ */
+const getCountOverdue = (tasksList) => tasksList.filter((el) => el.dueDate < Date.now()).length;
+
+export {getSearchAndFiltersTemplate, getCountByFlag, getCountWithTags, getCountRepeating, getCountDueToday, getCountOverdue};

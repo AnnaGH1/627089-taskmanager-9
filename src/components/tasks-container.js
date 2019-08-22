@@ -12,4 +12,4 @@ const renderTasksContainer = () => {
 
 const tasksContainer = document.createElement(`div`);
 
-export {renderTasksContainer};
+export {renderTasksContainer, tasksContainer};
