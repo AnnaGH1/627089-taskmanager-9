@@ -69,7 +69,7 @@ const getCountByFlag = (tasksList, flag) => tasksList.filter((el) => el[flag]).l
  * @param {Array} tasksList
  * @return {number}
  */
-const getCountWithTags = (tasksList) => tasksList.filter((el) => Array.from(el.tags).length > 1).length;
+const getCountTags = (tasksList) => tasksList.filter((el) => Array.from(el.tags).length > 1).length;
 
 /**
  * Counts repeating tasks
@@ -88,7 +88,7 @@ const getCountRepeating = (tasksList, daysList) => {
  * @param {Array} tasksList
  * @return {number}
  */
-const getCountDueToday = (tasksList) => tasksList.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
+const getCountToday = (tasksList) => tasksList.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
 
 /**
  * Counts tasks overdue
@@ -97,4 +97,4 @@ const getCountDueToday = (tasksList) => tasksList.filter((el) => el.dueDate > Da
  */
 const getCountOverdue = (tasksList) => tasksList.filter((el) => el.dueDate < Date.now()).length;
 
-export {getSearchAndFiltersTemplate, getCountByFlag, getCountWithTags, getCountRepeating, getCountDueToday, getCountOverdue};
+export {getSearchAndFiltersTemplate, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue};

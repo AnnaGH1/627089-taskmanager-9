@@ -1,6 +1,6 @@
 import {getTaskEditTemplate} from './task-edit.js';
 import {getTasksTemplate} from './tasks.js';
-import {days, colors, tasks, TASKS_PER_PAGE} from './data.js';
+import {DAYS, COLORS, tasks, TASKS_PER_PAGE} from './data.js';
 
 const taskEditMode = tasks[0];
 const pages = [];
@@ -27,9 +27,9 @@ groupTasksIntoPages(tasks);
  */
 const getTaskEditAndTasksTemplate = () => {
   const joinedTemplate = [];
-  joinedTemplate.push(getTaskEditTemplate(days, colors, taskEditMode));
+  joinedTemplate.push(getTaskEditTemplate(DAYS, COLORS, taskEditMode));
   joinedTemplate.push(getTasksTemplate(pages[0]));
   return joinedTemplate.join(``);
 };
 
-export {getTaskEditAndTasksTemplate, colors, days, pages, taskEditMode};
+export {getTaskEditAndTasksTemplate, pages, taskEditMode};
