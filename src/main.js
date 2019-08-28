@@ -8,23 +8,35 @@ import {renderTasksContainer, tasksContainer} from './components/tasks-container
 import {getTasksTemplate} from './components/tasks.js';
 import {getTaskEditAndTasksTemplate, pages} from './components/tasks-all.js';
 import {getLoadTemplate} from './components/load.js';
-import {filters} from './components/data.js';
+import {filters, tasks} from './components/data.js';
+import {render, unrender, Position} from "./components/util";
+import {Task} from "./components/task";
 
 renderComponent(controlContainer, getMenuTemplate(mainMenu));
 renderComponent(mainContainer, getSearchAndFiltersTemplate(filters));
 renderBoardContainer();
 renderComponent(boardContainer, getFilterListTemplate(sortType));
-renderComponent(renderTasksContainer(), getTaskEditAndTasksTemplate());
-renderComponent(boardContainer, getLoadTemplate());
+renderTasksContainer();
 
-let pageRendered = 0;
-const lastPageToRender = pages.length - 1;
+// renderComponent(renderTasksContainer(), getTaskEditAndTasksTemplate());
+const renderTask = (taskData) => {
+  const task = new Task(taskData);
+  render(tasksContainer, task.getElement(), Position.BEFOREEND);
+};
 
-const loadMore = document.querySelector(`.load-more`);
-loadMore.addEventListener(`click`, () => {
-  pageRendered++;
-  if (pageRendered === lastPageToRender) {
-    boardContainer.removeChild(loadMore);
-  }
-  renderComponent(tasksContainer, getTasksTemplate(pages[pageRendered]));
-});
+tasks.forEach((task) => renderTask(task));
+
+
+// renderComponent(boardContainer, getLoadTemplate());
+//
+// let pageRendered = 0;
+// const lastPageToRender = pages.length - 1;
+//
+// const loadMore = document.querySelector(`.load-more`);
+// loadMore.addEventListener(`click`, () => {
+//   pageRendered++;
+//   if (pageRendered === lastPageToRender) {
+//     boardContainer.removeChild(loadMore);
+//   }
+//   renderComponent(tasksContainer, getTasksTemplate(pages[pageRendered]));
+// });
