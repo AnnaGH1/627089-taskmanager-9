@@ -19,6 +19,23 @@ class Task {
     return this._element;
   }
 
+  /**
+   * Gets tag template
+   * @param {string} tag
+   * @return {string}
+   */
+  getTagTemplate(tag) {
+    return `<span class="card__hashtag-inner">
+      <span class="card__hashtag-name">
+        #${tag}
+      </span>
+    </span>`;
+  }
+
+  getTagsTemplate() {
+    return Array.from(this._tags).map(this.getTagTemplate).join(``);
+  }
+
   getTemplate() {
     return `<article class="card card--${this._color} ${Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `card--repeat` : ``}">
       <div class="card__form">
@@ -66,6 +83,7 @@ class Task {
   
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
+                ${this.getTagsTemplate()}
                 </div>
               </div>
             </div>

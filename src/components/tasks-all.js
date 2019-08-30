@@ -1,6 +1,4 @@
-import {getTaskEditTemplate} from './task-edit.js';
-import {getTasksTemplate} from './tasks.js';
-import {DAYS, COLORS, tasks, TASKS_PER_PAGE} from './data.js';
+import {tasks, TASKS_PER_PAGE} from './data.js';
 
 const taskEditMode = tasks[0];
 const pages = [];
@@ -21,15 +19,4 @@ const groupTasksIntoPages = (tasksData) => {
 
 groupTasksIntoPages(tasks);
 
-/**
- * Gets task edit and tasks template
- * @return {string}
- */
-const getTaskEditAndTasksTemplate = () => {
-  const joinedTemplate = [];
-  joinedTemplate.push(getTaskEditTemplate(DAYS, COLORS, taskEditMode));
-  joinedTemplate.push(getTasksTemplate(pages[0]));
-  return joinedTemplate.join(``);
-};
-
-export {getTaskEditAndTasksTemplate, pages, taskEditMode};
+export {pages, taskEditMode};
