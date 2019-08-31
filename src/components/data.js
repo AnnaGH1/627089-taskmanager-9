@@ -1,4 +1,4 @@
-import {getRandEls} from "./util";
+import {getRandEls} from "./utils";
 import {getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue} from "./search-filter.js";
 
 const TASKS_COUNT = 18;

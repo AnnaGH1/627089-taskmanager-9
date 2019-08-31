@@ -1,5 +1,4 @@
-import {createElement} from './util.js';
-import {getColorTemplate} from './colors.js';
+import {createElement} from './utils.js';
 import {COLORS} from './data.js';
 
 class TaskEdit {
@@ -69,6 +68,31 @@ class TaskEdit {
 
   getTagsTemplate() {
     return Array.from(this._tags).map(this.getTagTemplate).join(``);
+  }
+
+  /**
+   * Gets color template
+   * @param {string} color
+   * @return {string}
+   */
+  getColorTemplate(color) {
+    return `<input
+    type="radio"
+    id="color-${color}-1"
+    class="card__color-input card__color-input--${color} visually-hidden"
+    name="color"
+    value="${color}"
+    ${color === this._color ? `checked` : ``}
+  />
+  <label
+    for="color-${color}-1"
+    class="card__color card__color--${color}"
+    >${color}</label
+  >`;
+  }
+
+  getColorsTemplate() {
+    return COLORS.map(this.getColorTemplate.bind(this)).join(``);
   }
 
   getTemplate() {
@@ -157,7 +181,7 @@ class TaskEdit {
             <div class="card__colors-inner">
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
-              ${COLORS.map(getColorTemplate).join(``)}
+              ${this.getColorsTemplate()}
               </div>
             </div>
           </div>

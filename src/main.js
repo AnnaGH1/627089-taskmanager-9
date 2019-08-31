@@ -8,7 +8,7 @@ import {renderTasksContainer, tasksContainer} from './components/tasks-container
 import {pages} from './components/tasks-all.js';
 import {getLoadTemplate} from './components/load.js';
 import {filters} from './components/data.js';
-import {render, unrender, Position} from "./components/util";
+import {render, unrender, Position} from "./components/utils";
 import {Task} from "./components/task";
 import {TaskEdit} from "./components/task-edit";
 
