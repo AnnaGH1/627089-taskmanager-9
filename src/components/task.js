@@ -24,7 +24,7 @@ class Task {
    * @param {string} tag
    * @return {string}
    */
-  getTagTemplate(tag) {
+  static getTagTemplate(tag) {
     return `<span class="card__hashtag-inner">
       <span class="card__hashtag-name">
         #${tag}
@@ -33,7 +33,7 @@ class Task {
   }
 
   getTagsTemplate() {
-    return Array.from(this._tags).map(this.getTagTemplate).join(``);
+    return Array.from(this._tags).map(Task.getTagTemplate).join(``);
   }
 
   getTemplate() {

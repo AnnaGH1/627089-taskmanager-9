@@ -26,7 +26,7 @@ class TaskEdit {
    * @param {boolean} value
    * @return {string}
    */
-  getDayTemplate([key, value]) {
+  static getDayTemplate([key, value]) {
     return `<input
       class="visually-hidden card__repeat-day-input"
       type="checkbox"
@@ -41,7 +41,7 @@ class TaskEdit {
   }
 
   getDaysTemplate() {
-    return Object.entries(this._repeatingDays).map(this.getDayTemplate).join(``);
+    return Object.entries(this._repeatingDays).map(TaskEdit.getDayTemplate).join(``);
   }
 
   /**
@@ -49,7 +49,7 @@ class TaskEdit {
    * @param {string} tag
    * @return {string}
    */
-  getTagTemplate(tag) {
+  static getTagTemplate(tag) {
     return `<span class="card__hashtag-inner">
       <input
         type="hidden"
@@ -67,7 +67,7 @@ class TaskEdit {
   }
 
   getTagsTemplate() {
-    return Array.from(this._tags).map(this.getTagTemplate).join(``);
+    return Array.from(this._tags).map(TaskEdit.getTagTemplate).join(``);
   }
 
   /**
