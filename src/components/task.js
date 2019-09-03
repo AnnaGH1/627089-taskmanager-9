@@ -33,7 +33,7 @@ class Task {
   }
 
   getTagsTemplate() {
-    return Array.from(this._tags).map(Task.getTagTemplate).join(``);
+    return [...this._tags].map(Task.getTagTemplate).join(``);
   }
 
   getTemplate() {

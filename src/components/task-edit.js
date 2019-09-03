@@ -67,7 +67,7 @@ class TaskEdit {
   }
 
   getTagsTemplate() {
-    return Array.from(this._tags).map(TaskEdit.getTagTemplate).join(``);
+    return [...this._tags].map(TaskEdit.getTagTemplate).join(``);
   }
 
   /**

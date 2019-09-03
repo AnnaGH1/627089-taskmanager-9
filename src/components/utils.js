@@ -49,12 +49,9 @@ const render = (container, element, place) => {
 /**
  * Unrenders element
  * @param {Element} element
+ * @return {Element}
  */
-const unrender = (element) => {
-  if (element) {
-    element.remove();
-  }
-};
+const unrender = (element) => element ? element.remove() : element;
 
 export {getRandEls, createElement, render, unrender, Position};
 

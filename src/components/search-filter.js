@@ -69,7 +69,7 @@ const getCountByFlag = (tasksList, flag) => tasksList.filter((el) => el[flag]).l
  * @param {Array} tasksList
  * @return {number}
  */
-const getCountTags = (tasksList) => tasksList.filter((el) => Array.from(el.tags).length > 1).length;
+const getCountTags = (tasksList) => tasksList.filter((el) => [...el.tags].length > 1).length;
 
 /**
  * Counts repeating tasks
