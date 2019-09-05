@@ -1,14 +1,14 @@
 import {createElement} from './utils.js';
 
 class Task {
-  constructor({text, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) {
-    this._text = text;
-    this._dueDate = new Date(dueDate);
-    this._tags = tags;
-    this._repeatingDays = repeatingDays;
-    this._color = color;
-    this._isFavorite = isFavorite;
-    this._isArchive = isArchive;
+  constructor(task) {
+    this._text = task.text;
+    this._dueDate = new Date(task.dueDate);
+    this._tags = task.tags;
+    this._repeatingDays = task.repeatingDays;
+    this._color = task.color;
+    this._isFavorites = task.isFavorites;
+    this._isArchive = task.isArchive;
     this._element = null;
   }
 
@@ -55,7 +55,7 @@ class Task {
             </button>
             <button
               type="button"
-              class="card__btn card__btn--favorites ${this._isFavorite && `card__btn--disabled`}"
+              class="card__btn card__btn--favorites ${this._isFavorites && `card__btn--disabled`}"
             >
               favorites
             </button>

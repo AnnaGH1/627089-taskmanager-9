@@ -1,5 +1,5 @@
 import {getRandEls} from "./utils";
-import {getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue} from "./search-filter.js";
+import {getCountAll, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue} from "./search-filter.js";
 
 const TASKS_COUNT = 18;
 const TASKS_PER_PAGE = 8;
@@ -8,6 +8,15 @@ const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 const TAGS = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
 const FILTER_NAMES = [`all`, `overdue`, `today`, `favorites`, `repeating`, `tags`, `archive`];
+const FILTERS = {
+  all: getCountAll,
+  overdue: getCountOverdue,
+  today: getCountToday,
+  favorites: getCountByFlag,
+  repeating: getCountRepeating,
+  tags: getCountTags,
+  archive: getCountByFlag,
+};
 
 /**
  * Gets days schedule
@@ -37,15 +46,15 @@ const getTask = () => (
     tags: new Set(getRandEls(TAGS, TAGS_MAX)),
     repeatingDays: getDays(DAYS),
     color: COLORS[Math.floor(Math.random() * 5)],
-    isFavorite: Boolean(Math.round(Math.random())),
+    isFavorites: Boolean(Math.round(Math.random())),
     isArchive: Boolean(Math.round(Math.random())),
   }
 );
 
 /**
- * Gets filters data
+ * Gets filters
  * @param {Array} titles
- * @return {[]}
+ * @return {Array}
  */
 const getFilters = (titles) => {
   const filters = [];
@@ -54,7 +63,7 @@ const getFilters = (titles) => {
     filter.title = title;
     switch (title) {
       case `all`:
-        filter.count = getCountByFlag(tasks, `text`);
+        filter.count = getCountAll(tasks);
         break;
       case `overdue`:
         filter.count = getCountOverdue(tasks);
@@ -63,10 +72,10 @@ const getFilters = (titles) => {
         filter.count = getCountToday(tasks);
         break;
       case `favorites`:
-        filter.count = getCountByFlag(tasks, `isFavorite`);
+        filter.count = getCountByFlag(tasks, `isFavorites`);
         break;
       case `repeating`:
-        filter.count = getCountRepeating(tasks, DAYS);
+        filter.count = getCountRepeating(tasks, ``, DAYS);
         break;
       case `tags`:
         filter.count = getCountTags(tasks);
@@ -84,7 +93,30 @@ const getFilters = (titles) => {
   return filters;
 };
 
+/**
+ * Gets filters
+ * @param {Object} filtersData - titles and count functions
+ * @return {Array}
+ */
+const getFilters1 = (filtersData) => {
+  const filters = [];
+  Object.keys(filtersData).forEach((key) => {
+    const flag = `is${key.charAt(0).toUpperCase() + key.slice(1)}`;
+    filters.push({
+      title: key,
+      count: filtersData[key](tasks, flag, DAYS),
+      isChecked: false,
+      isDisabled: false,
+    });
+  });
+  return filters;
+};
+
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
 const filters = getFilters(FILTER_NAMES);
+console.log(filters);
+const filters1 = getFilters1(FILTERS);
+console.log(filters1);
+
 
 export {DAYS, COLORS, tasks, filters, TASKS_PER_PAGE};

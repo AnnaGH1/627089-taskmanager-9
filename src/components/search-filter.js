@@ -57,44 +57,52 @@ const getSearchAndFiltersTemplate = (filterData) => {
 };
 
 /**
+ * Counts all tasks
+ * @param {Array} tasks
+ * @return {number}
+ */
+const getCountAll = (tasks) => tasks.length;
+
+/**
  * Counts tasks by flag
- * @param {Array} tasksList
+ * @param {Array} tasks
  * @param {string} flag
  * @return {number}
  */
-const getCountByFlag = (tasksList, flag) => tasksList.filter((el) => el[flag]).length;
+const getCountByFlag = (tasks, flag) => tasks.filter((el) => el[flag]).length;
 
 /**
  * Counts tasks with tags
- * @param {Array} tasksList
+ * @param {Array} tasks
  * @return {number}
  */
-const getCountTags = (tasksList) => tasksList.filter((el) => [...el.tags].length > 1).length;
+const getCountTags = (tasks) => tasks.filter((el) => [...el.tags].length > 1).length;
 
 /**
  * Counts repeating tasks
- * @param {Array} tasksList
- * @param {Array} daysList
+ * @param {Array} tasks
+ * @param {string} flag
+ * @param {Array} days
  * @return {number}
  */
-const getCountRepeating = (tasksList, daysList) => {
+const getCountRepeating = (tasks, flag, days) => {
   let count = 0;
-  tasksList.forEach((el) => daysList.some((day) => el.repeatingDays[day]) ? count++ : count);
+  tasks.forEach((el) => days.some((day) => el.repeatingDays[day]) ? count++ : count);
   return count;
 };
 
 /**
  * Counts tasks due today
- * @param {Array} tasksList
+ * @param {Array} tasks
  * @return {number}
  */
-const getCountToday = (tasksList) => tasksList.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
+const getCountToday = (tasks) => tasks.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
 
 /**
  * Counts tasks overdue
- * @param {Array} tasksList
+ * @param {Array} tasks
  * @return {number}
  */
-const getCountOverdue = (tasksList) => tasksList.filter((el) => el.dueDate < Date.now()).length;
+const getCountOverdue = (tasks) => tasks.filter((el) => el.dueDate < Date.now()).length;
 
-export {getSearchAndFiltersTemplate, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue};
+export {getSearchAndFiltersTemplate, getCountAll, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue};
