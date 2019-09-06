@@ -7,7 +7,6 @@ const TAGS_MAX = 3;
 const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 const TAGS = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
-const FILTER_NAMES = [`all`, `overdue`, `today`, `favorites`, `repeating`, `tags`, `archive`];
 const FILTERS = {
   all: getCountAll,
   overdue: getCountOverdue,
@@ -53,52 +52,10 @@ const getTask = () => (
 
 /**
  * Gets filters
- * @param {Array} titles
- * @return {Array}
- */
-const getFilters = (titles) => {
-  const filters = [];
-  titles.forEach((title) => {
-    const filter = {};
-    filter.title = title;
-    switch (title) {
-      case `all`:
-        filter.count = getCountAll(tasks);
-        break;
-      case `overdue`:
-        filter.count = getCountOverdue(tasks);
-        break;
-      case `today`:
-        filter.count = getCountToday(tasks);
-        break;
-      case `favorites`:
-        filter.count = getCountByFlag(tasks, `isFavorites`);
-        break;
-      case `repeating`:
-        filter.count = getCountRepeating(tasks, ``, DAYS);
-        break;
-      case `tags`:
-        filter.count = getCountTags(tasks);
-        break;
-      case `archive`:
-        filter.count = getCountByFlag(tasks, `isArchive`);
-        break;
-      default:
-        filter.count = 0;
-    }
-    filter.isChecked = false;
-    filter.isDisabled = false;
-    filters.push(filter);
-  });
-  return filters;
-};
-
-/**
- * Gets filters
  * @param {Object} filtersData - titles and count functions
  * @return {Array}
  */
-const getFilters1 = (filtersData) => {
+const getFilters = (filtersData) => {
   const filters = [];
   Object.keys(filtersData).forEach((key) => {
     const flag = `is${key.charAt(0).toUpperCase() + key.slice(1)}`;
@@ -113,10 +70,6 @@ const getFilters1 = (filtersData) => {
 };
 
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
-const filters = getFilters(FILTER_NAMES);
-console.log(filters);
-const filters1 = getFilters1(FILTERS);
-console.log(filters1);
-
+const filters = getFilters(FILTERS);
 
 export {DAYS, COLORS, tasks, filters, TASKS_PER_PAGE};
