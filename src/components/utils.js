@@ -1,6 +1,22 @@
-const Position = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
+/**
+ * Prepends element to container
+ * @param {Element} container
+ * @param {Element} element
+ * @return {*|void}
+ */
+const prepend = (container, element) => container.prepend(element);
+
+/**
+ * Appends element to container
+ * @param {Element} container
+ * @param {Element} element
+ * @return {*|void}
+ */
+const append = (container, element) => container.append(element);
+
+const renderMap = {
+  afterbegin: prepend,
+  beforeend: append,
 };
 
 /**
@@ -34,17 +50,9 @@ const createElement = (template) => {
  * @param {Element} container
  * @param {Element} element
  * @param {string} place
+ * @return {*|void}
  */
-const render = (container, element, place) => {
-  switch (place) {
-    case Position.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case Position.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
+const render = (container, element, place) => renderMap[place](container, element);
 
 /**
  * Unrenders element
@@ -53,5 +61,5 @@ const render = (container, element, place) => {
  */
 const unrender = (element) => element ? element.remove() : element;
 
-export {getRandEls, createElement, render, unrender, Position};
+export {getRandEls, createElement, render, unrender};
 

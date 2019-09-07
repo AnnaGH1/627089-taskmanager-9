@@ -7,7 +7,7 @@ const TAGS_MAX = 3;
 const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 const TAGS = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
-const FILTERS = {
+const filterMap = {
   all: getCountAll,
   overdue: getCountOverdue,
   today: getCountToday,
@@ -70,6 +70,6 @@ const getFilters = (filtersData) => {
 };
 
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
-const filters = getFilters(FILTERS);
+const filters = getFilters(filterMap);
 
 export {DAYS, COLORS, tasks, filters, TASKS_PER_PAGE};
