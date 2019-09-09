@@ -1,4 +1,11 @@
 /**
+ * Capitalizes the first letter of a string
+ * @param {string} string
+ * @return {string}
+ */
+const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
+/**
  * Prepends element to container
  * @param {Element} container
  * @param {Element} element
@@ -48,7 +55,7 @@ const createElement = (template) => {
 /**
  * Renders element
  * @param {Element} container
- * @param {Element} element
+ * @param {ChildNode} element
  * @param {string} place
  * @return {*|void}
  */
@@ -61,5 +68,5 @@ const render = (container, element, place) => renderMap[place](container, elemen
  */
 const unrender = (element) => element ? element.remove() : element;
 
-export {getRandEls, createElement, render, unrender};
+export {capitalizeFirstLetter, getRandEls, createElement, render, unrender};
 

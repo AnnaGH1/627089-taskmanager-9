@@ -1,22 +1,20 @@
 import {getMenuTemplate, controlContainer, mainMenu} from './components/main-menu.js';
 import {mainContainer} from './components/main-container.js';
-import {getSearchAndFiltersTemplate} from './components/search-filter';
+import {getSearchAndFiltersTemplate, getCountByFlag} from './components/search-filter';
 import {renderComponent} from './components/rendering.js';
 import {renderBoardContainer, boardContainer} from './components/board-container.js';
 import {getFilterListTemplate, sortType} from './components/filter-sort.js';
 import {renderTasksContainer, tasksContainer} from './components/tasks-container.js';
-import {pages} from './components/tasks-all.js';
 import {getLoadTemplate} from './components/load.js';
-import {filters} from './components/data.js';
-import {render, unrender} from "./components/utils";
+import {getMessageTemplate} from "./components/message";
+import {TASKS_COUNT, TASKS_PER_PAGE, tasks, filters} from './components/data.js';
+import {createElement, render} from "./components/utils";
 import {Task} from "./components/task";
 import {TaskEdit} from "./components/task-edit";
 
 renderComponent(controlContainer, getMenuTemplate(mainMenu));
 renderComponent(mainContainer, getSearchAndFiltersTemplate(filters));
 renderBoardContainer();
-renderComponent(boardContainer, getFilterListTemplate(sortType));
-renderTasksContainer();
 
 const renderTask = (taskData) => {
   const task = new Task(taskData);
@@ -60,18 +58,26 @@ const renderTask = (taskData) => {
   render(tasksContainer, task.getElement(), `beforeend`);
 };
 
-pages[0].forEach((task) => renderTask(task));
+// Show message if there are no tasks or all task are archived
+if (TASKS_COUNT === 0 || getCountByFlag(tasks, `isArchive`) === TASKS_COUNT) {
+  render(boardContainer, createElement(getMessageTemplate()), `beforeend`);
+} else {
+  // Render tasks otherwise
+  renderComponent(boardContainer, getFilterListTemplate(sortType));
+  renderTasksContainer();
+  let taskPageStart = 0;
+  let taskPageEnd = TASKS_PER_PAGE;
+  tasks.slice(taskPageStart, taskPageEnd).forEach((task) => renderTask(task));
 
-renderComponent(boardContainer, getLoadTemplate());
+  renderComponent(boardContainer, getLoadTemplate());
 
-let pageRendered = 0;
-const lastPageToRender = pages.length - 1;
-
-const loadMore = document.querySelector(`.load-more`);
-loadMore.addEventListener(`click`, () => {
-  pageRendered++;
-  if (pageRendered === lastPageToRender) {
-    boardContainer.removeChild(loadMore);
-  }
-  pages[pageRendered].forEach((task) => renderTask(task));
-});
+  const loadMore = document.querySelector(`.load-more`);
+  loadMore.addEventListener(`click`, () => {
+    taskPageStart += TASKS_PER_PAGE;
+    taskPageEnd += TASKS_PER_PAGE;
+    if (taskPageEnd >= tasks.length) {
+      boardContainer.removeChild(loadMore);
+    }
+    tasks.slice(taskPageStart, taskPageEnd).forEach((task) => renderTask(task));
+  });
+}
