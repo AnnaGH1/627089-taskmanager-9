@@ -9,8 +9,8 @@ import {getLoadTemplate} from './components/load.js';
 import {getMessageTemplate} from "./components/message";
 import {TASKS_COUNT, TASKS_PER_PAGE, tasks, filters} from './components/data.js';
 import {createElement, render} from "./components/utils";
-import {Task} from "./components/task";
-import {TaskEdit} from "./components/task-edit";
+import Task from "./components/task";
+import TaskEdit from "./components/task-edit";
 
 renderComponent(controlContainer, getMenuTemplate(mainMenu));
 renderComponent(mainContainer, getSearchAndFiltersTemplate(filters));
