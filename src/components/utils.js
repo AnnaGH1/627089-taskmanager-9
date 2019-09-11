@@ -1,6 +1,29 @@
-const Position = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
+/**
+ * Capitalizes the first letter of a string
+ * @param {string} string
+ * @return {string}
+ */
+const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
+/**
+ * Prepends element to container
+ * @param {Element} container
+ * @param {Element} element
+ * @return {*|void}
+ */
+const prepend = (container, element) => container.prepend(element);
+
+/**
+ * Appends element to container
+ * @param {Element} container
+ * @param {Element} element
+ * @return {*|void}
+ */
+const append = (container, element) => container.append(element);
+
+const renderMap = {
+  afterbegin: prepend,
+  beforeend: append,
 };
 
 /**
@@ -32,19 +55,11 @@ const createElement = (template) => {
 /**
  * Renders element
  * @param {Element} container
- * @param {Element} element
+ * @param {ChildNode} element
  * @param {string} place
+ * @return {*|void}
  */
-const render = (container, element, place) => {
-  switch (place) {
-    case Position.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case Position.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
+const render = (container, element, place) => renderMap[place](container, element);
 
 /**
  * Unrenders element
@@ -53,5 +68,5 @@ const render = (container, element, place) => {
  */
 const unrender = (element) => element ? element.remove() : element;
 
-export {getRandEls, createElement, render, unrender, Position};
+export {capitalizeFirstLetter, getRandEls, createElement, render, unrender};
 

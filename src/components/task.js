@@ -19,6 +19,11 @@ class Task {
     return this._element;
   }
 
+  removeElement() {
+    this._element = null;
+    return this._element;
+  }
+
   /**
    * Gets tag template
    * @param {string} tag

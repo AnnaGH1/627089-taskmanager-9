@@ -1,4 +1,4 @@
-import {getRandEls} from "./utils";
+import {capitalizeFirstLetter, getRandEls} from "./utils";
 import {getCountAll, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue} from "./search-filter.js";
 
 const TASKS_COUNT = 18;
@@ -7,7 +7,7 @@ const TAGS_MAX = 3;
 const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 const TAGS = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
-const FILTERS = {
+const filterMap = {
   all: getCountAll,
   overdue: getCountOverdue,
   today: getCountToday,
@@ -58,7 +58,7 @@ const getTask = () => (
 const getFilters = (filtersData) => {
   const filters = [];
   Object.keys(filtersData).forEach((key) => {
-    const flag = `is${key.charAt(0).toUpperCase() + key.slice(1)}`;
+    const flag = `is${capitalizeFirstLetter(key)}`;
     filters.push({
       title: key,
       count: filtersData[key](tasks, flag, DAYS),
@@ -70,6 +70,6 @@ const getFilters = (filtersData) => {
 };
 
 const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
-const filters = getFilters(FILTERS);
+const filters = getFilters(filterMap);
 
-export {DAYS, COLORS, tasks, filters, TASKS_PER_PAGE};
+export {DAYS, COLORS, tasks, filters, TASKS_COUNT, TASKS_PER_PAGE};
