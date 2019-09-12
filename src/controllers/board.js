@@ -1,4 +1,4 @@
-import {createElement, render, unrender} from '../components/utils';
+import {Position, createElement, render, unrender} from '../components/utils';
 import {TASKS_COUNT, TASKS_PER_PAGE} from '../components/data';
 import Board from '../components/board';
 import TaskList from '../components/task-list';
@@ -57,25 +57,25 @@ class BoardController {
       }));
 
 
-    render(this._taskList.getElement(), taskComponent.getElement(), `beforeend`);
+    render(this._taskList.getElement(), taskComponent.getElement(), Position.BEFOREEND);
   }
 
   init() {
     // Show message if there are no tasks or all task are archived
     if (TASKS_COUNT === 0 || getCountByFlag(this._tasks, `isArchive`) === TASKS_COUNT) {
-      render(this._container, this._board.getElement(), `beforeend`);
-      render(this._board.getElement(), createElement(getMessageTemplate()), `beforeend`);
+      render(this._container, this._board.getElement(), Position.BEFOREEND);
+      render(this._board.getElement(), createElement(getMessageTemplate()), Position.BEFOREEND);
     } else {
       // Render sort and tasks otherwise
-      render(this._container, this._board.getElement(), `beforeend`);
-      render(this._board.getElement(), createElement(getFilterListTemplate(sortType)), `beforeend`);
-      render(this._board.getElement(), this._taskList.getElement(), `beforeend`);
+      render(this._container, this._board.getElement(), Position.BEFOREEND);
+      render(this._board.getElement(), createElement(getFilterListTemplate(sortType)), Position.BEFOREEND);
+      render(this._board.getElement(), this._taskList.getElement(), Position.BEFOREEND);
       let taskPageStart = 0;
       let taskPageEnd = TASKS_PER_PAGE;
       this._tasks.slice(taskPageStart, taskPageEnd).forEach((task) => this._renderTask(task));
 
       // Render Load button
-      render(this._board.getElement(), this._load.getElement(), `beforeend`);
+      render(this._board.getElement(), this._load.getElement(), Position.BEFOREEND);
 
       this._load.getElement().addEventListener(`click`, () => {
         taskPageStart += TASKS_PER_PAGE;
