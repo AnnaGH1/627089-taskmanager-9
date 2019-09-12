@@ -1,8 +1,9 @@
-import {createElement} from './utils.js';
 import {COLORS} from './data.js';
+import AbstractComponent from "./abstract-component";
 
-class TaskEdit {
+class TaskEdit extends AbstractComponent {
   constructor(task) {
+    super();
     this._text = task.text;
     this._dueDate = new Date(task.dueDate);
     this._tags = task.tags;
@@ -10,14 +11,6 @@ class TaskEdit {
     this._color = task.color;
     this._isFavorites = task.isFavorites;
     this._isArchive = task.isArchive;
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
   }
 
   /**
@@ -196,4 +189,4 @@ class TaskEdit {
   }
 }
 
-export {TaskEdit};
+export {TaskEdit as default};

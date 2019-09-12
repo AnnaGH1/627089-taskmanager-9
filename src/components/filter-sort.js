@@ -10,11 +10,7 @@ const getSortFilterTemplate = (filter) => `<a href="${filter.href}" class="board
  * @param {Array} sortOptions
  * @return {string}
  */
-const getFilterListTemplate = (sortOptions) => `
-  <div class="board__filter-list">
-      ${sortOptions.map(getSortFilterTemplate).join(``)}
-  </div>
-`;
+const getFilterListTemplate = (sortOptions) => `<div class="board__filter-list">${sortOptions.map(getSortFilterTemplate).join(``)}</div>`;
 
 const sortType = [
   {

@@ -1,3 +1,8 @@
+const Position = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
+
 /**
  * Capitalizes the first letter of a string
  * @param {string} string
@@ -22,8 +27,8 @@ const prepend = (container, element) => container.prepend(element);
 const append = (container, element) => container.append(element);
 
 const renderMap = {
-  afterbegin: prepend,
-  beforeend: append,
+  [Position.AFTERBEGIN]: prepend,
+  [Position.BEFOREEND]: append,
 };
 
 /**
@@ -68,5 +73,5 @@ const render = (container, element, place) => renderMap[place](container, elemen
  */
 const unrender = (element) => element ? element.remove() : element;
 
-export {capitalizeFirstLetter, getRandEls, createElement, render, unrender};
+export {Position, capitalizeFirstLetter, getRandEls, createElement, render, unrender};
 
