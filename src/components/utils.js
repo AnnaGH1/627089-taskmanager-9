@@ -2,6 +2,10 @@ const Position = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
 };
+const Key = {
+  ESCAPE_IE: `Escape`,
+  ESCAPE: `Esc`,
+};
 
 /**
  * Capitalizes the first letter of a string
@@ -73,5 +77,5 @@ const render = (container, element, place) => renderMap[place](container, elemen
  */
 const unrender = (element) => element ? element.remove() : element;
 
-export {Position, capitalizeFirstLetter, getRandEls, createElement, render, unrender};
+export {Position, Key, capitalizeFirstLetter, getRandEls, createElement, render, unrender};
 
