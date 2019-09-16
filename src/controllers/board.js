@@ -79,22 +79,18 @@ class BoardController {
       return;
     }
 
-    // Clear tasks and load button
-    this._taskList.getElement().innerHTML = ``;
-    unrender(this._load.getElement());
-
     // Get tasks by sort type
     switch (e.target.dataset.sortType) {
       case `date-up`:
         const sortedByDateUpTasks = this._tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
-        this._renderTasksAndLoadButton(sortedByDateUpTasks);
+        this._renderTasks(sortedByDateUpTasks);
         break;
       case `date-down`:
         const sortedByDateDownTasks = this._tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
-        this._renderTasksAndLoadButton(sortedByDateDownTasks);
+        this._renderTasks(sortedByDateDownTasks);
         break;
       case `default`:
-        this._renderTasksAndLoadButton(this._tasks);
+        this._renderTasks(this._tasks);
         break;
     }
   }
@@ -104,20 +100,31 @@ class BoardController {
    * @param {Array} tasksSequence
    * @private
    */
-  _renderTasksAndLoadButton(tasksSequence) {
-    let taskPageStart = this._taskPageStart;
-    let taskPageEnd = this._taskPageEnd;
-    tasksSequence.slice(taskPageStart, taskPageEnd).forEach((task) => this._renderTask(task));
+  _renderTasks(tasksSequence) {
+    // Remove previous tasks and load button if rendered
+    this._taskList.getElement().innerHTML = ``;
+
+    // If rendered, remove load button corresponding to the previous tasks
+    if (this._load._element) {
+      unrender(this._load.getElement());
+      this._load.removeElement();
+    }
+
+    // Reset page counters
+    this._taskPageStart = 0;
+    this._taskPageEnd = TASKS_PER_PAGE;
+    tasksSequence.slice(this._taskPageStart, this._taskPageEnd).forEach((task) => this._renderTask(task));
 
     // Render Load button
     render(this._board.getElement(), this._load.getElement(), Position.BEFOREEND);
     this._load.getElement().addEventListener(`click`, () => {
-      taskPageStart += TASKS_PER_PAGE;
-      taskPageEnd += TASKS_PER_PAGE;
-      if (taskPageEnd >= tasksSequence.length) {
+      this._taskPageStart += TASKS_PER_PAGE;
+      this._taskPageEnd += TASKS_PER_PAGE;
+      if (this._taskPageEnd >= tasksSequence.length) {
         unrender(this._load.getElement());
+        this._load.removeElement();
       }
-      tasksSequence.slice(taskPageStart, taskPageEnd).forEach((task) => this._renderTask(task));
+      tasksSequence.slice(this._taskPageStart, this._taskPageEnd).forEach((task) => this._renderTask(task));
     });
   }
 
@@ -125,14 +132,13 @@ class BoardController {
    * Renders page with tasks of no tasks message
    */
   init() {
+    // Render board container
+    render(this._container, this._board.getElement(), Position.BEFOREEND);
+
     // Show message if there are no tasks or all task are archived
     if (TASKS_COUNT === 0 || getCountByFlag(this._tasks, `isArchive`) === TASKS_COUNT) {
-      render(this._container, this._board.getElement(), Position.BEFOREEND);
       render(this._board.getElement(), createElement(getMessageTemplate()), Position.BEFOREEND);
     } else {
-      // Render board container
-      render(this._container, this._board.getElement(), Position.BEFOREEND);
-
       // Render sort
       render(this._board.getElement(), this._sort.getElement(), Position.BEFOREEND);
       this._sort.getElement().addEventListener(`click`, (e) => {
@@ -143,7 +149,7 @@ class BoardController {
       render(this._board.getElement(), this._taskList.getElement(), Position.BEFOREEND);
 
       // Render tasks and load button
-      this._renderTasksAndLoadButton(this._tasks);
+      this._renderTasks(this._tasks);
     }
   }
 }
