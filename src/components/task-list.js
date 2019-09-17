@@ -1,9 +1,11 @@
 import AbstractComponent from './abstract-component';
 
-class TaskList extends AbstractComponent {
+export default class TaskList extends AbstractComponent {
+  constructor() {
+    super();
+  }
+
   getTemplate() {
     return `<div class="board__tasks"></div>`;
   }
 }
-
-export {TaskList as default};

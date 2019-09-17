@@ -49,7 +49,7 @@ const getFiltersTemplate = (filterData) => `
  * @param {Object} filterData
  * @return {string}
  */
-const getSearchAndFiltersTemplate = (filterData) => {
+export const getSearchAndFiltersTemplate = (filterData) => {
   const joinedTemplate = [];
   joinedTemplate.push(getSearchTemplate());
   joinedTemplate.push(getFiltersTemplate(filterData));
@@ -61,7 +61,7 @@ const getSearchAndFiltersTemplate = (filterData) => {
  * @param {Array} tasks
  * @return {number}
  */
-const getCountAll = (tasks) => tasks.length;
+export const getCountAll = (tasks) => tasks.length;
 
 /**
  * Counts tasks by flag
@@ -69,14 +69,14 @@ const getCountAll = (tasks) => tasks.length;
  * @param {string} flag
  * @return {number}
  */
-const getCountByFlag = (tasks, flag) => tasks.filter((el) => el[flag]).length;
+export const getCountByFlag = (tasks, flag) => tasks.filter((el) => el[flag]).length;
 
 /**
  * Counts tasks with tags
  * @param {Array} tasks
  * @return {number}
  */
-const getCountTags = (tasks) => tasks.filter((el) => [...el.tags].length > 1).length;
+export const getCountTags = (tasks) => tasks.filter((el) => [...el.tags].length > 1).length;
 
 /**
  * Counts repeating tasks
@@ -85,7 +85,7 @@ const getCountTags = (tasks) => tasks.filter((el) => [...el.tags].length > 1).le
  * @param {Array} days
  * @return {number}
  */
-const getCountRepeating = (tasks, flag, days) => {
+export const getCountRepeating = (tasks, flag, days) => {
   let count = 0;
   tasks.forEach((el) => days.some((day) => el.repeatingDays[day]) ? count++ : count);
   return count;
@@ -96,13 +96,12 @@ const getCountRepeating = (tasks, flag, days) => {
  * @param {Array} tasks
  * @return {number}
  */
-const getCountToday = (tasks) => tasks.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
+export const getCountToday = (tasks) => tasks.filter((el) => el.dueDate > Date.now() && el.dueDate < Date.now() + 24 * 60 * 60 * 1000).length;
 
 /**
  * Counts tasks overdue
  * @param {Array} tasks
  * @return {number}
  */
-const getCountOverdue = (tasks) => tasks.filter((el) => el.dueDate < Date.now()).length;
+export const getCountOverdue = (tasks) => tasks.filter((el) => el.dueDate < Date.now()).length;
 
-export {getSearchAndFiltersTemplate, getCountAll, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue};

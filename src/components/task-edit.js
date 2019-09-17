@@ -1,7 +1,7 @@
 import {COLORS} from './data.js';
 import AbstractComponent from "./abstract-component";
 
-class TaskEdit extends AbstractComponent {
+export default class TaskEdit extends AbstractComponent {
   constructor(task) {
     super();
     this._text = task.text;
@@ -188,5 +188,3 @@ class TaskEdit extends AbstractComponent {
     </article>`;
   }
 }
-
-export {TaskEdit as default};

@@ -1,8 +1,8 @@
-const Position = {
+export const Position = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
 };
-const Key = {
+export const Key = {
   ESCAPE_IE: `Escape`,
   ESCAPE: `Esc`,
 };
@@ -12,7 +12,7 @@ const Key = {
  * @param {string} string
  * @return {string}
  */
-const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 /**
  * Prepends element to container
@@ -41,7 +41,7 @@ const renderMap = {
  * @param {number} count
  * @return {Array}
  */
-const getRandEls = (arr, count) => {
+export const getRandEls = (arr, count) => {
   const selection = [];
   while (selection.length < count) {
     selection.push(arr[Math.floor(Math.random() * arr.length)]);
@@ -55,7 +55,7 @@ const getRandEls = (arr, count) => {
  * @param {string} template
  * @return {ChildNode}
  */
-const createElement = (template) => {
+export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
@@ -68,14 +68,12 @@ const createElement = (template) => {
  * @param {string} place
  * @return {*|void}
  */
-const render = (container, element, place) => renderMap[place](container, element);
+export const render = (container, element, place) => renderMap[place](container, element);
 
 /**
  * Unrenders element
  * @param {Element} element
  * @return {Element}
  */
-const unrender = (element) => element ? element.remove() : element;
-
-export {Position, Key, capitalizeFirstLetter, getRandEls, createElement, render, unrender};
+export const unrender = (element) => element ? element.remove() : element;
 

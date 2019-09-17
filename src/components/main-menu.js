@@ -19,14 +19,14 @@ const getMenuItemTemplate = (menuItem) => `
  * @param {Object} menuData
  * @return {string}
  */
-const getMenuTemplate = (menuData) => `
+export const getMenuTemplate = (menuData) => `
   <section class="control__btn-wrap">
     ${Object.keys(menuData).map((el) => getMenuItemTemplate(menuData[el])).join(``)}
   </section>
 `;
 
-const controlContainer = document.querySelector(`.control`);
-const mainMenu = {
+export const controlContainer = document.querySelector(`.control`);
+export const mainMenu = {
   newTask: {
     name: `+ add new task`,
     csstext: `new-task`,
@@ -43,5 +43,3 @@ const mainMenu = {
     isChecked: true
   }
 };
-
-export {getMenuTemplate, controlContainer, mainMenu};

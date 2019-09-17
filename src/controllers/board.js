@@ -9,7 +9,7 @@ import Sort from '../components/sort';
 import {getCountByFlag} from '../components/search-filter';
 import {getMessageTemplate} from '../components/message';
 
-class BoardController {
+export default class BoardController {
   constructor(container, tasks) {
     this._container = container;
     this._tasks = tasks;
@@ -156,5 +156,3 @@ class BoardController {
     this._tasksSequence.slice(this._taskPageStart, this._taskPageEnd).forEach((task) => this._renderTask(task));
   }
 }
-
-export {BoardController as default};

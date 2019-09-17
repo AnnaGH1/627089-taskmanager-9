@@ -1,11 +1,11 @@
 import {capitalizeFirstLetter, getRandEls} from "./utils";
 import {getCountAll, getCountByFlag, getCountTags, getCountRepeating, getCountToday, getCountOverdue} from "./search-filter.js";
 
-const TASKS_COUNT = 18;
-const TASKS_PER_PAGE = 8;
+export const TASKS_COUNT = 18;
+export const TASKS_PER_PAGE = 8;
 const TAGS_MAX = 3;
-const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
-const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+export const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
+export const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 const TAGS = [`personal`, `important`, `homework`, `theory`, `practice`, `intensive`, `keks`, `summer`, `travel`];
 const filterMap = {
   all: getCountAll,
@@ -69,7 +69,5 @@ const getFilters = (filtersData) => {
   return filters;
 };
 
-const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
-const filters = getFilters(filterMap);
-
-export {DAYS, COLORS, tasks, filters, TASKS_COUNT, TASKS_PER_PAGE};
+export const tasks = new Array(TASKS_COUNT).fill({}).map(getTask);
+export const filters = getFilters(filterMap);

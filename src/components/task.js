@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-class Task extends AbstractComponent {
+export default class Task extends AbstractComponent {
   constructor(task) {
     super();
     this._text = task.text;
@@ -86,5 +86,3 @@ class Task extends AbstractComponent {
     </article>`;
   }
 }
-
-export {Task as default};
