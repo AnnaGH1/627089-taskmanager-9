@@ -1,3 +1,4 @@
+import {Position, unrender} from './utils';
 import {COLORS} from './data.js';
 import AbstractComponent from "./abstract-component";
 
@@ -9,8 +10,28 @@ export default class TaskEdit extends AbstractComponent {
     this._tags = task.tags;
     this._repeatingDays = task.repeatingDays;
     this._color = task.color;
-    this._isFavorites = task.isFavorites;
-    this._isArchive = task.isArchive;
+    this._subscribeOnEvents();
+  }
+
+  _subscribeOnEvents() {
+    // Add new tag
+    this.getElement()
+      .querySelector(`.card__hashtag-input`)
+      .addEventListener(`change`, (e) => {
+        e.preventDefault();
+        this.getElement()
+          .querySelector(`.card__hashtag-list`)
+          .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
+        e.target.value = ``;
+      });
+
+    // Remove tag
+    this.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__hashtag-delete`)) {
+          unrender(e.target.parentElement);
+        }
+      });
   }
 
   /**
@@ -47,7 +68,7 @@ export default class TaskEdit extends AbstractComponent {
       <input
         type="hidden"
         name="hashtag"
-        value="repeat"
+        value="${tag}"
         class="card__hashtag-hidden-input"
       />
       <p class="card__hashtag-name">

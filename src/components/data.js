@@ -45,8 +45,6 @@ const getTask = () => (
     tags: new Set(getRandEls(TAGS, TAGS_MAX)),
     repeatingDays: getDays(DAYS),
     color: COLORS[Math.floor(Math.random() * 5)],
-    isFavorites: Boolean(Math.round(Math.random())),
-    isArchive: Boolean(Math.round(Math.random())),
   }
 );
 
