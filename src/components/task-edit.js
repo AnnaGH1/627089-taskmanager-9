@@ -1,4 +1,4 @@
-import {Position, unrender} from './utils';
+import {Key, Position, unrender} from './utils';
 import {COLORS} from './data.js';
 import AbstractComponent from "./abstract-component";
 
@@ -10,6 +10,8 @@ export default class TaskEdit extends AbstractComponent {
     this._tags = task.tags;
     this._repeatingDays = task.repeatingDays;
     this._color = task.color;
+    this._isFavorites = task.isFavorites;
+    this._isArchive = task.isArchive;
     this._subscribeOnEvents();
   }
 
@@ -17,12 +19,14 @@ export default class TaskEdit extends AbstractComponent {
     // Add new tag
     this.getElement()
       .querySelector(`.card__hashtag-input`)
-      .addEventListener(`change`, (e) => {
-        e.preventDefault();
-        this.getElement()
-          .querySelector(`.card__hashtag-list`)
-          .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
-        e.target.value = ``;
+      .addEventListener(`keydown`, (e) => {
+        if (e.key === Key.ENTER) {
+          e.preventDefault();
+          this.getElement()
+            .querySelector(`.card__hashtag-list`)
+            .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
+          e.target.value = ``;
+        }
       });
 
     // Remove tag
@@ -116,15 +120,13 @@ export default class TaskEdit extends AbstractComponent {
           <div class="card__control">
             <button
               type="button"
-              class="card__btn card__btn--archive"
-              ${this._isArchive ? `disabled` : ``}
+              class="card__btn card__btn--archive ${this._isArchive ? `card__btn--disabled` : ``}"
             >
               archive
             </button>
             <button
               type="button"
-              class="card__btn card__btn--favorites"
-              ${this._isFavorites ? `disabled` : ``}
+              class="card__btn card__btn--favorites ${this._isFavorites ? `card__btn--disabled` : ``}"
             >
               favorites
             </button>

@@ -8,6 +8,8 @@ export default class Task extends AbstractComponent {
     this._tags = task.tags;
     this._repeatingDays = task.repeatingDays;
     this._color = task.color;
+    this._isFavorites = task.isFavorites;
+    this._isArchive = task.isArchive;
   }
 
   /**
