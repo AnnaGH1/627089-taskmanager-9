@@ -1,6 +1,9 @@
-import {Key, Position, render} from "../components/utils";
-import Task from "../components/task";
-import TaskEdit from "../components/task-edit";
+import {Key, Position, render} from '../components/utils';
+import Task from '../components/task';
+import TaskEdit from '../components/task-edit';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/light.css';
 
 export default class TaskController {
   constructor(container, data, onDataChange, onViewChange) {
@@ -90,6 +93,9 @@ export default class TaskController {
         }
       });
 
+    // Toggle date
+    this._taskEdit.getElement().addEventListener(`click`, this._onDateButtonClick);
+
     // Modify color
     this._taskEdit.getElement()
       .addEventListener(`click`, (e) => {
@@ -102,7 +108,24 @@ export default class TaskController {
       });
   }
 
+  _onDateButtonClick(e) {
+    if (e.target.classList.contains(`card__date-deadline-toggle`)) {
+      // Toggle date fieldset
+      e.target.nextElementSibling.toggleAttribute(`disabled`);
+
+      // Toggle status text
+      e.target.firstElementChild.textContent = e.target.firstElementChild.textContent === `yes` ? `no` : `yes`;
+    }
+  }
+
   _create() {
+    const flatpickrConfig = {
+      altInput: true,
+      allowInput: true,
+      defaultDate: this._data.dueDate,
+    };
+    flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), flatpickrConfig);
+
     this._subscribeOnEvents();
     render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
   }
