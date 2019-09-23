@@ -1,10 +1,11 @@
 import AbstractComponent from "./abstract-component";
+import moment from 'moment';
 
-class Task extends AbstractComponent {
+export default class Task extends AbstractComponent {
   constructor(task) {
     super();
     this._text = task.text;
-    this._dueDate = new Date(task.dueDate);
+    this._dueDate = task.dueDate;
     this._tags = task.tags;
     this._repeatingDays = task.repeatingDays;
     this._color = task.color;
@@ -69,7 +70,7 @@ class Task extends AbstractComponent {
               <div class="card__dates">
                 <div class="card__date-deadline">
                   <p class="card__input-deadline-wrap">
-                    <span class="card__date">${new Date(this._dueDate).toDateString()}</span>
+                    <span class="card__date">${moment(this._dueDate).format(`ddd MMM DD YYYY`)}</span>
                   </p>
                 </div>
               </div>
@@ -86,5 +87,3 @@ class Task extends AbstractComponent {
     </article>`;
   }
 }
-
-export {Task as default};

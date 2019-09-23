@@ -1,16 +1,42 @@
+import {Key, Position, unrender} from './utils';
 import {COLORS} from './data.js';
 import AbstractComponent from "./abstract-component";
+import moment from 'moment';
 
-class TaskEdit extends AbstractComponent {
+export default class TaskEdit extends AbstractComponent {
   constructor(task) {
     super();
     this._text = task.text;
-    this._dueDate = new Date(task.dueDate);
+    this._dueDate = task.dueDate;
     this._tags = task.tags;
     this._repeatingDays = task.repeatingDays;
     this._color = task.color;
     this._isFavorites = task.isFavorites;
     this._isArchive = task.isArchive;
+    this._subscribeOnEvents();
+  }
+
+  _subscribeOnEvents() {
+    // Add new tag
+    this.getElement()
+      .querySelector(`.card__hashtag-input`)
+      .addEventListener(`keydown`, (e) => {
+        if (e.key === Key.ENTER) {
+          e.preventDefault();
+          this.getElement()
+            .querySelector(`.card__hashtag-list`)
+            .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
+          e.target.value = ``;
+        }
+      });
+
+    // Remove tag
+    this.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__hashtag-delete`)) {
+          unrender(e.target.parentElement);
+        }
+      });
   }
 
   /**
@@ -47,7 +73,7 @@ class TaskEdit extends AbstractComponent {
       <input
         type="hidden"
         name="hashtag"
-        value="repeat"
+        value="${tag}"
         class="card__hashtag-hidden-input"
       />
       <p class="card__hashtag-name">
@@ -95,15 +121,13 @@ class TaskEdit extends AbstractComponent {
           <div class="card__control">
             <button
               type="button"
-              class="card__btn card__btn--archive"
-              ${this._isArchive ? `disabled` : ``}
+              class="card__btn card__btn--archive ${this._isArchive ? `card__btn--disabled` : ``}"
             >
               archive
             </button>
             <button
               type="button"
-              class="card__btn card__btn--favorites"
-              ${this._isFavorites ? `disabled` : ``}
+              class="card__btn card__btn--favorites ${this._isFavorites ? `card__btn--disabled` : ``}"
             >
               favorites
             </button>
@@ -139,7 +163,7 @@ class TaskEdit extends AbstractComponent {
                       type="text"
                       placeholder="23 September"
                       name="date"
-                      value="${this._dueDate ? new Date(this._dueDate).toDateString() : ``}"
+                      value="${this._dueDate ? moment(this._dueDate).format(`ddd MMM DD YYYY`) : ``}"
                     />
                   </label>
                 </fieldset>
@@ -188,5 +212,3 @@ class TaskEdit extends AbstractComponent {
     </article>`;
   }
 }
-
-export {TaskEdit as default};
