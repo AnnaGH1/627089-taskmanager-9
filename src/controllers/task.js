@@ -17,7 +17,7 @@ export default class TaskController {
     this._create();
   }
 
-  _subscribeOnEvents() {
+  _subscribeOnTaskEditEvents() {
     // Closes edit mode on Esc keydown
     const onEscKeyDown = (e) => {
       if (e.key === Key.ESCAPE_IE || e.key === Key.ESCAPE) {
@@ -82,7 +82,9 @@ export default class TaskController {
           document.removeEventListener(`keydown`, onEscKeyDown);
         }
       }));
+  }
 
+  _subscribeOnControlsEvents() {
     // Add to or remove from archive/favorites
     this._taskEdit.getElement()
       .addEventListener(`click`, (e) => {
@@ -92,33 +94,14 @@ export default class TaskController {
           e.target.classList.toggle(`card__btn--disabled`);
         }
       });
+  }
 
+  _subscribeOnDateEvents() {
     // Toggle date
     this._taskEdit.getElement().addEventListener(`click`, this._onDateButtonClick);
-
-    // Modify color
-    this._taskEdit.getElement()
-      .addEventListener(`click`, (e) => {
-        if (e.target.classList.contains(`card__color`)) {
-          const colorClassNew = `card--${e.target.previousElementSibling.value}`;
-          this._taskEdit.getElement()
-            .classList.replace(this._colorClass, colorClassNew);
-          this._colorClass = colorClassNew;
-        }
-      });
   }
 
-  _onDateButtonClick(e) {
-    if (e.target.classList.contains(`card__date-deadline-toggle`)) {
-      // Toggle date fieldset
-      e.target.nextElementSibling.toggleAttribute(`disabled`);
-
-      // Toggle status text
-      e.target.firstElementChild.textContent = e.target.firstElementChild.textContent === `yes` ? `no` : `yes`;
-    }
-  }
-
-  _subscribeOnRepeatingDaysChange() {
+  _subscribeOnRepeatingDaysEvents() {
     this._taskEdit.getElement()
       .addEventListener(`click`, (e) => {
         if (e.target.classList.contains(`card__repeat-toggle`)) {
@@ -134,6 +117,18 @@ export default class TaskController {
       });
   }
 
+  _subscribeOnColorEvents() {
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__color`)) {
+          const colorClassNew = `card--${e.target.previousElementSibling.value}`;
+          this._taskEdit.getElement()
+            .classList.replace(this._colorClass, colorClassNew);
+          this._colorClass = colorClassNew;
+        }
+      });
+  }
+
   _create() {
     const flatpickrConfig = {
       altInput: true,
@@ -142,14 +137,27 @@ export default class TaskController {
     };
     flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), flatpickrConfig);
 
-    this._subscribeOnRepeatingDaysChange();
-    this._subscribeOnEvents();
+    this._subscribeOnControlsEvents();
+    this._subscribeOnDateEvents();
+    this._subscribeOnRepeatingDaysEvents();
+    this._subscribeOnColorEvents();
+    this._subscribeOnTaskEditEvents();
     render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
   }
 
   setDefaultView() {
     if (this._container.getElement().contains(this._taskEdit.getElement())) {
       this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+    }
+  }
+
+  _onDateButtonClick(e) {
+    if (e.target.classList.contains(`card__date-deadline-toggle`)) {
+      // Toggle date fieldset
+      e.target.nextElementSibling.toggleAttribute(`disabled`);
+
+      // Toggle status text
+      e.target.firstElementChild.textContent = e.target.firstElementChild.textContent === `yes` ? `no` : `yes`;
     }
   }
 
