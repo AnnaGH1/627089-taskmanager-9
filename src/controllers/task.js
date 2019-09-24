@@ -118,6 +118,22 @@ export default class TaskController {
     }
   }
 
+  _subscribeOnRepeatingDaysChange() {
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__repeat-toggle`)) {
+          this._onRepeatButtonClick(e);
+        }
+      });
+
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__repeat-day`)) {
+          this._onDayClick(e);
+        }
+      });
+  }
+
   _create() {
     const flatpickrConfig = {
       altInput: true,
@@ -126,6 +142,7 @@ export default class TaskController {
     };
     flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), flatpickrConfig);
 
+    this._subscribeOnRepeatingDaysChange();
     this._subscribeOnEvents();
     render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
   }
@@ -134,5 +151,29 @@ export default class TaskController {
     if (this._container.getElement().contains(this._taskEdit.getElement())) {
       this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
     }
+  }
+
+  _onRepeatButtonClick(e) {
+    e.preventDefault();
+    // Toggle repeat fieldset
+    e.target.nextElementSibling.toggleAttribute(`disabled`);
+
+    // Toggle wave
+    this._taskEdit.getElement()
+      .classList.toggle(`card--repeat`);
+
+    // Clear repeating days if disabled
+    if (e.target.nextElementSibling.hasAttribute(`disabled`)) {
+      e.target.nextElementSibling.querySelectorAll(`.card__repeat-day-input`)
+        .forEach((el) => el.removeAttribute(`checked`));
+    }
+
+    // Toggle status text
+    e.target.firstElementChild.textContent = e.target.firstElementChild.textContent === `yes` ? `no` : `yes`;
+  }
+
+  _onDayClick(e) {
+    e.preventDefault();
+    e.target.previousElementSibling.toggleAttribute(`checked`);
   }
 }
