@@ -1,4 +1,4 @@
-import {Key, Position, render} from '../components/utils';
+import {Key, Position, render, unrender} from '../components/utils';
 import Task from '../components/task';
 import TaskEdit from '../components/task-edit';
 import flatpickr from 'flatpickr';
@@ -117,6 +117,29 @@ export default class TaskController {
       });
   }
 
+  _subscribeOnTagEvents() {
+    // Add new tag
+    this._taskEdit.getElement()
+      .querySelector(`.card__hashtag-input`)
+      .addEventListener(`keydown`, (e) => {
+        if (e.key === Key.ENTER) {
+          e.preventDefault();
+          this._taskEdit.getElement()
+            .querySelector(`.card__hashtag-list`)
+            .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
+          e.target.value = ``;
+        }
+      });
+
+    // Remove tag
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__hashtag-delete`)) {
+          unrender(e.target.parentElement);
+        }
+      });
+  }
+
   _subscribeOnColorEvents() {
     this._taskEdit.getElement()
       .addEventListener(`click`, (e) => {
@@ -140,6 +163,7 @@ export default class TaskController {
     this._subscribeOnControlsEvents();
     this._subscribeOnDateEvents();
     this._subscribeOnRepeatingDaysEvents();
+    this._subscribeOnTagEvents();
     this._subscribeOnColorEvents();
     this._subscribeOnTaskEditEvents();
     render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
