@@ -1,6 +1,5 @@
 import {COLORS} from './data.js';
 import AbstractComponent from "./abstract-component";
-import moment from 'moment';
 
 export default class TaskEdit extends AbstractComponent {
   constructor(task) {
@@ -138,7 +137,7 @@ export default class TaskEdit extends AbstractComponent {
                       type="text"
                       placeholder="23 September"
                       name="date"
-                      value="${this._dueDate ? moment(this._dueDate).format(`ddd MMM DD YYYY`) : ``}"
+                      value="${this._dueDate ? this._dueDate : ``}"
                     />
                   </label>
                 </fieldset>

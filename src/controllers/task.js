@@ -61,7 +61,7 @@ export default class TaskController {
             text: formData.get(`text`),
             color: formData.get(`color`),
             tags: new Set(formData.getAll(`hashtag`)),
-            dueDate: new Date(formData.get(`date`)),
+            dueDate: formData.get(`date`) * 1000,
             repeatingDays: formData.getAll(`repeat`)
               .reduce((acc, it) => {
                 acc[it] = true;
@@ -156,6 +156,7 @@ export default class TaskController {
     const flatpickrConfig = {
       altInput: true,
       allowInput: true,
+      dateFormat: `U`,
       defaultDate: this._data.dueDate,
     };
     flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), flatpickrConfig);
