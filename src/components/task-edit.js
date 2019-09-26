@@ -1,7 +1,5 @@
-import {Key, Position, unrender} from './utils';
 import {COLORS} from './data.js';
 import AbstractComponent from "./abstract-component";
-import moment from 'moment';
 
 export default class TaskEdit extends AbstractComponent {
   constructor(task) {
@@ -13,30 +11,6 @@ export default class TaskEdit extends AbstractComponent {
     this._color = task.color;
     this._isFavorites = task.isFavorites;
     this._isArchive = task.isArchive;
-    this._subscribeOnEvents();
-  }
-
-  _subscribeOnEvents() {
-    // Add new tag
-    this.getElement()
-      .querySelector(`.card__hashtag-input`)
-      .addEventListener(`keydown`, (e) => {
-        if (e.key === Key.ENTER) {
-          e.preventDefault();
-          this.getElement()
-            .querySelector(`.card__hashtag-list`)
-            .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
-          e.target.value = ``;
-        }
-      });
-
-    // Remove tag
-    this.getElement()
-      .addEventListener(`click`, (e) => {
-        if (e.target.classList.contains(`card__hashtag-delete`)) {
-          unrender(e.target.parentElement);
-        }
-      });
   }
 
   /**
@@ -163,7 +137,7 @@ export default class TaskEdit extends AbstractComponent {
                       type="text"
                       placeholder="23 September"
                       name="date"
-                      value="${this._dueDate ? moment(this._dueDate).format(`ddd MMM DD YYYY`) : ``}"
+                      value="${this._dueDate ? this._dueDate : ``}"
                     />
                   </label>
                 </fieldset>

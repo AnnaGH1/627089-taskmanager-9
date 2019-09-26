@@ -1,4 +1,4 @@
-import {Key, Position, render} from '../components/utils';
+import {Key, Position, render, unrender} from '../components/utils';
 import Task from '../components/task';
 import TaskEdit from '../components/task-edit';
 import flatpickr from 'flatpickr';
@@ -17,7 +17,7 @@ export default class TaskController {
     this._create();
   }
 
-  _subscribeOnEvents() {
+  _subscribeOnTaskEditEvents() {
     // Closes edit mode on Esc keydown
     const onEscKeyDown = (e) => {
       if (e.key === Key.ESCAPE_IE || e.key === Key.ESCAPE) {
@@ -61,7 +61,7 @@ export default class TaskController {
             text: formData.get(`text`),
             color: formData.get(`color`),
             tags: new Set(formData.getAll(`hashtag`)),
-            dueDate: new Date(formData.get(`date`)),
+            dueDate: formData.get(`date`) * 1000,
             repeatingDays: formData.getAll(`repeat`)
               .reduce((acc, it) => {
                 acc[it] = true;
@@ -82,7 +82,9 @@ export default class TaskController {
           document.removeEventListener(`keydown`, onEscKeyDown);
         }
       }));
+  }
 
+  _subscribeOnControlsEvents() {
     // Add to or remove from archive/favorites
     this._taskEdit.getElement()
       .addEventListener(`click`, (e) => {
@@ -92,11 +94,53 @@ export default class TaskController {
           e.target.classList.toggle(`card__btn--disabled`);
         }
       });
+  }
 
+  _subscribeOnDateEvents() {
     // Toggle date
     this._taskEdit.getElement().addEventListener(`click`, this._onDateButtonClick);
+  }
 
-    // Modify color
+  _subscribeOnRepeatingDaysEvents() {
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__repeat-toggle`)) {
+          this._onRepeatButtonClick(e);
+        }
+      });
+
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__repeat-day`)) {
+          this._onDayClick(e);
+        }
+      });
+  }
+
+  _subscribeOnTagEvents() {
+    // Add new tag
+    this._taskEdit.getElement()
+      .querySelector(`.card__hashtag-input`)
+      .addEventListener(`keydown`, (e) => {
+        if (e.key === Key.ENTER) {
+          e.preventDefault();
+          this._taskEdit.getElement()
+            .querySelector(`.card__hashtag-list`)
+            .insertAdjacentHTML(Position.BEFOREEND, TaskEdit.getTagTemplate(e.target.value));
+          e.target.value = ``;
+        }
+      });
+
+    // Remove tag
+    this._taskEdit.getElement()
+      .addEventListener(`click`, (e) => {
+        if (e.target.classList.contains(`card__hashtag-delete`)) {
+          unrender(e.target.parentElement);
+        }
+      });
+  }
+
+  _subscribeOnColorEvents() {
     this._taskEdit.getElement()
       .addEventListener(`click`, (e) => {
         if (e.target.classList.contains(`card__color`)) {
@@ -106,6 +150,30 @@ export default class TaskController {
           this._colorClass = colorClassNew;
         }
       });
+  }
+
+  _create() {
+    const flatpickrConfig = {
+      altInput: true,
+      allowInput: true,
+      dateFormat: `U`,
+      defaultDate: this._data.dueDate,
+    };
+    flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), flatpickrConfig);
+
+    this._subscribeOnControlsEvents();
+    this._subscribeOnDateEvents();
+    this._subscribeOnRepeatingDaysEvents();
+    this._subscribeOnTagEvents();
+    this._subscribeOnColorEvents();
+    this._subscribeOnTaskEditEvents();
+    render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
+  }
+
+  setDefaultView() {
+    if (this._container.getElement().contains(this._taskEdit.getElement())) {
+      this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+    }
   }
 
   _onDateButtonClick(e) {
@@ -118,21 +186,27 @@ export default class TaskController {
     }
   }
 
-  _create() {
-    const flatpickrConfig = {
-      altInput: true,
-      allowInput: true,
-      defaultDate: this._data.dueDate,
-    };
-    flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), flatpickrConfig);
+  _onRepeatButtonClick(e) {
+    e.preventDefault();
+    // Toggle repeat fieldset
+    e.target.nextElementSibling.toggleAttribute(`disabled`);
 
-    this._subscribeOnEvents();
-    render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
+    // Toggle wave
+    this._taskEdit.getElement()
+      .classList.toggle(`card--repeat`);
+
+    // Clear repeating days if disabled
+    if (e.target.nextElementSibling.hasAttribute(`disabled`)) {
+      e.target.nextElementSibling.querySelectorAll(`.card__repeat-day-input`)
+        .forEach((el) => el.removeAttribute(`checked`));
+    }
+
+    // Toggle status text
+    e.target.firstElementChild.textContent = e.target.firstElementChild.textContent === `yes` ? `no` : `yes`;
   }
 
-  setDefaultView() {
-    if (this._container.getElement().contains(this._taskEdit.getElement())) {
-      this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
-    }
+  _onDayClick(e) {
+    e.preventDefault();
+    e.target.previousElementSibling.toggleAttribute(`checked`);
   }
 }
