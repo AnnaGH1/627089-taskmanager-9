@@ -78,6 +78,16 @@ export default class BoardController {
     this._load.getElement().addEventListener(`click`, this._onLoadButtonClick.bind(this));
   }
 
+  hide() {
+    this._board.getElement()
+      .classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._board.getElement()
+      .classList.remove(`visually-hidden`);
+  }
+
   init() {
     this._renderBoardContainer();
 
