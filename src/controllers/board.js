@@ -7,6 +7,7 @@ import Sort from '../components/sort';
 import TaskController from "./task";
 import {getCountByFlag} from '../components/search-filter';
 import {getMessageTemplate} from '../components/message';
+import {Mode} from './task';
 
 export default class BoardController {
   constructor(container, tasks) {
@@ -22,6 +23,7 @@ export default class BoardController {
     this._subscriptions = [];
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._creatingTask = null;
   }
 
   _renderBoardContainer() {
@@ -42,7 +44,7 @@ export default class BoardController {
   }
 
   _renderTask(task) {
-    const taskController = new TaskController(this._taskList, task, this._onDataChange, this._onViewChange);
+    const taskController = new TaskController(this._taskList, task, Mode.DEFAULT, this._onDataChange, this._onViewChange);
     this._subscriptions.push(taskController.setDefaultView.bind(taskController));
   }
 
@@ -86,6 +88,32 @@ export default class BoardController {
   show() {
     this._board.getElement()
       .classList.remove(`visually-hidden`);
+  }
+
+  createTask() {
+    if (this._creatingTask) {
+      return;
+    }
+
+    const defaultTask = {
+      text: ``,
+      dueDate: Date.now(),
+      tags: new Set(),
+      color: `black`,
+      repeatingDays: {
+        'mo': false,
+        'tu': false,
+        'we': false,
+        'th': false,
+        'fr': false,
+        'sa': false,
+        'su': false,
+      },
+      isFavorites: false,
+      isArchive: false,
+    };
+
+    this._creatingTask = new TaskController(this._taskList, defaultTask, Mode.ADDING, this._onDataChange, this._onViewChange);
   }
 
   init() {
@@ -138,7 +166,19 @@ export default class BoardController {
   }
 
   _onDataChange(newData, oldData) {
-    this._tasks[this._tasks.findIndex((el) => el === oldData)] = newData;
+    const index = this._tasks.findIndex((el) => el === oldData);
+
+    if (newData === null) {
+      // Remove deleted task
+      this._tasks = [...this._tasks.slice(0, index), ...this._tasks.slice(index + 1)];
+    } else if (oldData === null) {
+      // Add new task
+      this._creatingTask = null;
+      this._tasks = [newData, ...this._tasks];
+    } else {
+      // Update task
+      this._tasks[index] = newData;
+    }
     this._renderTasks(this._tasks);
   }
 }

@@ -5,8 +5,13 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 export default class TaskController {
-  constructor(container, data, onDataChange, onViewChange) {
+  constructor(container, data, mode, onDataChange, onViewChange) {
     this._container = container;
     this._data = data;
     this._onDataChange = onDataChange;
@@ -14,6 +19,7 @@ export default class TaskController {
     this._taskView = new Task(data);
     this._taskEdit = new TaskEdit(data);
     this._colorClass = `card--${this._data.color}`;
+    this._mode = mode;
     this._create();
   }
 
@@ -152,6 +158,17 @@ export default class TaskController {
       });
   }
 
+  _subscribeOnDeleteEvents() {
+    if (this._mode === Mode.ADDING) {
+      this._taskEdit.getElement()
+        .querySelector(`.card__delete`).setAttribute(`disabled`, ``);
+    }
+
+    this._taskEdit.getElement()
+      .querySelector(`.card__delete`)
+      .addEventListener(`click`, () => this._onDataChange(null, this._data));
+  }
+
   _create() {
     const flatpickrConfig = {
       altInput: true,
@@ -167,7 +184,19 @@ export default class TaskController {
     this._subscribeOnTagEvents();
     this._subscribeOnColorEvents();
     this._subscribeOnTaskEditEvents();
-    render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
+    this._subscribeOnDeleteEvents();
+
+    // Default mode
+    let currentView = this._taskView;
+    let position = Position.BEFOREEND;
+
+    // Adding mode
+    if (this._mode === Mode.ADDING) {
+      currentView = this._taskEdit;
+      position = Position.AFTERBEGIN;
+    }
+
+    render(this._container.getElement(), currentView.getElement(), position);
   }
 
   setDefaultView() {

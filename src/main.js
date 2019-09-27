@@ -27,14 +27,27 @@ mainContainer.querySelector(`.main__control`)
       return;
     }
 
+    const MENU_ITEM_ID = {
+      TASKS: `control__task`,
+      STATISTICS: `control__statistic`,
+      NEW_TASK: `control__new-task`,
+    };
+
     switch (e.target.id) {
-      case `control__task`:
+      case MENU_ITEM_ID.TASKS:
         statistics.getElement().classList.add(`visually-hidden`);
         boardController.show();
         break;
-      case `control__statistic`:
+      case MENU_ITEM_ID.STATISTICS:
         statistics.getElement().classList.remove(`visually-hidden`);
         boardController.hide();
+        break;
+      case MENU_ITEM_ID.NEW_TASK:
+        statistics.getElement().classList.add(`visually-hidden`);
+        boardController.show();
+        boardController.createTask();
+        // Keep tasks menu item checked
+        siteMenu.getElement().querySelector(`#${MENU_ITEM_ID.TASKS}`).checked = true;
         break;
     }
   });
