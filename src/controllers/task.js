@@ -84,6 +84,11 @@ export default class TaskController {
             isArchive,
             isFavorites,
           };
+
+          // Clear new task default data
+          if (this._mode === Mode.ADDING) {
+            this._data = null;
+          }
           this._onDataChange(entry, this._data);
           document.removeEventListener(`keydown`, onEscKeyDown);
         }
